@@ -26,6 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
+TOKEN = str(os.getenv("TOKEN"))
+TOKEN_D2R = str(os.getenv("TOKEN_D2R"))
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "users.apps.UsersConfig",
     "social.apps.SocialConfig",
+    "guilds.apps.GuildsConfig",
 ]
 
 MIDDLEWARE = [
@@ -116,6 +120,49 @@ TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 
 USE_TZ = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname:^10s}] [{asctime}] {module:^10s} [{filename:>10s}:{lineno:<3d}] {message}',
+            'style': '{',
+        },
+    },
+    "handlers": {
+        'console': {
+            "class": "logging.StreamHandler",
+            "formatter": 'verbose',
+            "level": "DEBUG"
+        },
+    },
+    "root": {
+        "handlers": ['console'],
+        "level": 'DEBUG',
+    },
+    "loggers": {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'nextcord': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        }
+    },
+}
+
+# Запуск Redis
+# docker run -p 6379:6379 -it redis/redis-stack:latest
+CACHES = {
+   'default': {
+      'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+      'LOCATION': 'redis://127.0.0.1:6379',
+   }
+}
 
 
 # Static files (CSS, JavaScript, Images)

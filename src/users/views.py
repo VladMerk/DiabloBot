@@ -4,10 +4,14 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from social.models import Social
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class HomeView(TemplateView):
     template_name = "users/home.html"
+
 
 def discord_login(request):
     """Функция вызываемая при переходе по ссылке авторизации через дискорд.
@@ -16,7 +20,9 @@ def discord_login(request):
     переход на сслыку, указанную в настройках дискорда.
     В данном случае - /users/login/redirect/
     """
+    # FIXME придумать как брать данные из базы не жестко закодированно
     link = Social.objects.get(name="Discord").auth_url
+    logger.debug("Redirect to discord.org")
     return redirect(link)
 
 
@@ -27,10 +33,12 @@ def discord_login_redirect(request):
     """
     # получаем код из ссылки после перехода
     code = request.GET.get("code")
+    logger.debug(f"Code from discord: {code}")
     # полученный код отправляется опять на сервер дискорда
     # для проверки и обратно получаем данные юзера для аутентификации
     user = _exchange_code(code)
-    print(type(user))
+    logger.debug(f"User from discord: {user}")
+    logger.debug(f"Type of user instance: {type(user)}")
     # если юзер получен пробуем его авторизовать на сайте
     discord_user = authenticate(request=request, user=user)
     # потом залогинить

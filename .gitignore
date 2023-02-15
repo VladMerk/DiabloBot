@@ -131,3 +131,5 @@ dmypy.json
 
 fixtures/
 .vscode
+.flake8
+todo.txt

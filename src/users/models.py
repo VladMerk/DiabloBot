@@ -14,6 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     flags = models.IntegerField(blank=True, null=True)
     messages = models.PositiveIntegerField(default=0)
     level = models.PositiveIntegerField(default=1)
+    cookies = models.PositiveIntegerField(default=0)
 
     password = models.CharField(max_length=128)
     is_staff = models.BooleanField(default=False)
