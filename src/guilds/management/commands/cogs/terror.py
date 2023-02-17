@@ -3,20 +3,20 @@ from datetime import datetime
 
 import aiohttp
 import nextcord
-import redis
 from django.conf import settings
 from django.core.cache import cache
-from guilds.models import Guild, TerrorZones, TerrorZoneTemplate
 from nextcord.ext import commands, tasks
+
+from guilds.models import Settings, TerrorZones
 
 logger = logging.getLogger(__name__)
 
 
-class TerrorZoneChannel(commands.Cog, name='Terror Zone'):
+class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.params = {'token': settings.TOKEN_D2R}
-        self.url = 'https://d2runewizard.com/api/terror-zone'
+        self.params = {"token": settings.TOKEN_D2R}
+        self.url = "https://d2runewizard.com/api/terror-zone"
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
 
@@ -25,22 +25,27 @@ class TerrorZoneChannel(commands.Cog, name='Terror Zone'):
             async with session.get(url=self.url, params=self.params) as r:
                 if r.status == 200:
                     rjson = await r.json()
-                    return rjson['terrorZone']['zone']
+                    logger.info(f"New zone is {rjson['terrorZone']['zone']}")
+                    return rjson["terrorZone"]["zone"]
                 else:
                     logger.warning("Connection error in terror zone function")
                     return None
 
-    def check_redis(self):
-        try:
-            # FIXME Определить настройку адреса сервера в settings.py
-            r = redis.Redis(host='127.0.0.1', port=6379)
-            return r.ping()
-        except redis.exceptions.ConnectionError:
-            return False
+    async def _get_max_time(self):
+        data = await Settings.objects.afirst()
+        if data is None:
+            logger.warning("Max time is not find in database.")
+            return None
+        return data.max_time
 
     @tasks.loop(seconds=30)
     async def terror_zone(self):
-        if datetime.now().minute not in range(2, 6):
+        _time = await self._get_max_time()
+        if _time is None:
+            logger.warning("Max time not found.")
+            return
+
+        if datetime.now().minute not in range(2, _time):
             return
 
         zone = await self.get_json()
@@ -48,37 +53,34 @@ class TerrorZoneChannel(commands.Cog, name='Terror Zone'):
             logger.warning(f"Zone is {zone}. Return from function")
             return
 
-        if not self.check_redis():
+        if not await self.bot.check_redis():
             logger.critical("Redis is not connected!.")
             return
 
-        logger.debug(f"Zone from site is {zone}. Zone from cache is {cache.get('zone')}")
+        if cache.get("zone") is None or zone != cache.get("zone"):
+            _data = await Settings.objects.afirst()
 
-        if cache.get('zone') is None or zone != cache.get('zone'):
-            bzone = await TerrorZoneTemplate.objects.filter(key=zone).afirst()
-            if bzone is None:
-                logger.warning("New zone not found in database.")
-                return
-            for guild in self.bot.guilds:
-                _zone = await TerrorZones.objects.select_related().filter(zone__key=zone, guild=guild.id).afirst()
-                logger.debug(f"{_zone}")
-                if _zone is not None:
-                    message = f"\n**Terror Zone**: {_zone.zone.name_en} in **{_zone.zone.act} Act**\n"
-                    message += f"**Зона Ужаса**: {_zone.zone.name_ru} в **{_zone.zone.act} акте**\n"
-                    message += f"\n**Иммунитеты**: {_zone.zone.immunities_en}\n"
-                    message += f"**Количество пачек с уникальными мобами**: {_zone.zone.boss_packs}\n"
-                    message += f"**Uniques**: {_zone.zone.super_uniques}\n"
-                    message += f"**Количество особых сундуков**: {_zone.zone.sparkly_chests}" if bool(_zone.zone.sparkly_chests) else ''
-                    message += "\nProvided By <https://d2runewizard.com>"
-                    if _zone.role_id:
-                        zone_role = nextcord.utils.get(guild.roles, id=_zone.role_id)
-                        message += f"\n\n{zone_role.mention}"
+            server_id = _data.id
+            server = self.bot.get_guild(server_id)
 
-                    _guild = await Guild.objects.filter(id=guild.id).afirst()
-                    channel = self.bot.get_channel(_guild.terror_channels_id)
+            _zone = await TerrorZones.objects.select_related().filter(key=zone).afirst()
+            logger.debug(f"{_zone}")
+            if _zone is not None:
+                message = f"\n**Terror Zone**: {_zone.name_en} in **{_zone.act} Act**\n"
+                message += f"**Зона Ужаса**: {_zone.name_ru} в **{_zone.act} акте**\n"
+                message += f"\n**Иммунитеты**: {_zone.immunities_en}\n"
+                message += f"**Количество пачек с уникальными мобами**: {_zone.boss_packs}\n"
+                message += f"**Uniques**: {_zone.super_uniques}\n"
+                message += f"**Количество особых сундуков**: {_zone.sparkly_chests}" if bool(_zone.sparkly_chests) else ""
+                message += "\nProvided By <https://d2runewizard.com>"
+                if _zone.role_id:
+                    zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
+                    message += f"\n\n{zone_role.mention}"
 
-                    await channel.send(message)
-            cache.set('zone', zone, 60*60)
+                channel = self.bot.get_channel(_data.terror_channel_id)
+
+                await channel.send(message)
+                cache.set("zone", zone)
 
     @terror_zone.before_loop
     async def befor_terror_zone(self):

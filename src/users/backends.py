@@ -10,7 +10,7 @@ class DiscordBackend(ModelBackend):
             user = User.objects.get(username=user.get("username"))
         except User.DoesNotExist:
             user = User.objects.create_user(
-                id=user.get('id'),
+                id=user.get("id"),
                 username=user.get("username"),
                 discriminator=user.get("discriminator"),
                 email=user.get("email"),
@@ -21,7 +21,6 @@ class DiscordBackend(ModelBackend):
             return user
         else:
             return user
-
 
     def get_user(self, user_id):
         try:

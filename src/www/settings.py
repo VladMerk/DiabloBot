@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -124,44 +125,45 @@ USE_TZ = True
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    'formatters': {
-        'verbose': {
-            'format': '[{levelname:^10s}] [{asctime}] {module:^10s} [{filename:>10s}:{lineno:<3d}] {message}',
-            'style': '{',
+    "formatters": {
+        "verbose": {
+            "format": "[{levelname:^10s}] [{asctime}] {module:^10s} [{filename:>10s}:{lineno:<3d}] {message}",
+            "style": "{",
         },
     },
     "handlers": {
-        'console': {
+        "console": {
             "class": "logging.StreamHandler",
-            "formatter": 'verbose',
-            "level": "DEBUG"
+            "formatter": "verbose",
+            "level": "DEBUG",
         },
     },
     "root": {
-        "handlers": ['console'],
-        "level": 'DEBUG',
+        "handlers": ["console"],
+        "level": "DEBUG",
     },
     "loggers": {
-        'django': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': True,
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": True,
         },
-        'nextcord': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': False,
-        }
+        "nextcord": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
     },
 }
 
 # Запуск Redis
 # docker run -p 6379:6379 -it redis/redis-stack:latest
 CACHES = {
-   'default': {
-      'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-      'LOCATION': 'redis://127.0.0.1:6379',
-   }
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "TIMEOUT": None,
+    }
 }
 
 

@@ -1,28 +1,55 @@
 from django.contrib import admin
 
-from .models import (Channel,
-                    Guild,
-                    Roles,
-                    TerrorZoneTemplate,
-                    TerrorZones,
-                )
+from .models import Channels, Roles, Settings, TerrorZones
 
-admin.site.register(Guild)
+# admin.site.register(Settings)
 admin.site.register(Roles)
+admin.site.register(Channels)
 
 
-@admin.register(Channel)
-class ChannelAdmin(admin.ModelAdmin):
-    list_filter = ('guild',)
-    list_display =  ('name', 'guild')
+@admin.register(Settings)
+class SettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            "Name Server",
+            {
+                "fields": (
+                    "id",
+                    "name",
+                ),
+            },
+        ),
+        (
+            "Terror Channel",
+            {
+                "fields": ("terror_channel", "max_time"),
+            },
+        ),
+        (
+            "Clone Channel",
+            {
+                "fields": ("clone_channel",),
+            },
+        ),
+        (
+            "Fast Trade Channel",
+            {
+                "fields": ("fasttrade_channel", "fasttrade_channel_role", "fasttrade_channel_time"),
+            },
+        ),
+    )
 
+    readonly_fields = ("id", "name")
 
-@admin.register(TerrorZoneTemplate)
-class TerrorZoneTemplatesAdmin(admin.ModelAdmin):
-    list_display = ('name_en', 'act')
-    list_filter = ('act',)
+    class Meta:
+        verbose_name = "Settings"
+
 
 @admin.register(TerrorZones)
 class TerrorZonesAdmin(admin.ModelAdmin):
-    list_display = ('zone', 'guild')
-    list_filter = ( 'zone__act', 'guild')
+    list_display = (
+        "act",
+        "name_en",
+    )
+    list_filter = ("act",)
+    list_display_links = ("name_en",)

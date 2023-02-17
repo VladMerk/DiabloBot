@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+import logging
+
+import requests
 from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
+
 from social.models import Social
-import requests
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -57,9 +59,7 @@ def _exchange_code(code):
         "redirect_uri": "http://127.0.0.1:8000/users/login/redirect/",
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    response = requests.Session().post(
-        url="https://discord.com/api/oauth2/token", data=data, headers=headers
-    )
+    response = requests.Session().post(url="https://discord.com/api/oauth2/token", data=data, headers=headers)
     credentials = response.json()
     access_token = credentials.get("access_token")
     response = requests.get(

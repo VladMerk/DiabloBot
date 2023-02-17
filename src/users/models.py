@@ -1,7 +1,8 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from .managers import DiscordManager
+from django.db import models
+
 from . import utils
+from .managers import DiscordManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
