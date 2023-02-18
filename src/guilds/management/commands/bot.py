@@ -14,11 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class Client(commands.Bot):
-    # 1023904638992396330
+
     async def check_redis(self):
         try:
-            # FIXME Определить настройку адреса сервера в settings.py
-            r = redis.Redis(host="127.0.0.1", port=6379)
+            r = redis.Redis(host="redis", port=6379)
             return r.ping()
         except redis.exceptions.ConnectionError:
             return False
@@ -56,18 +55,26 @@ class Client(commands.Bot):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id}) on server {server}")
 
     async def on_message(self, message: nextcord.message.Message):
-        # TODO Добавить фильтр на сообщения от бота
         await self.process_commands(message)
 
-        logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")
+        if not message.author.bot:
+            logger.debug(f"Message channel: {message.channel}")
+            logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")
 
         _data = await Settings.objects.afirst()
 
-        if message.channel in [_data.terror_channel_id, _data.clone_channel_id]:
+        if message.channel.id in [_data.terror_channel_id, _data.clone_channel_id]:
             await message.publish()
+            logger.debug(f"Message in {message.channel} channel is published.")
             return
 
         if message.channel.id == _data.fasttrade_channel_id:
+
+            logger.debug(f"Member type: {message.author.bot}")
+            if message.author.bot:
+                logger.debug(f"Bot leave message in {message.channel} channel.")
+                return
+
             server = self.get_guild(_data.id)
             role = nextcord.utils.get(server.roles, id=_data.fasttrade_channel_role_id)
             logger.debug(role)
@@ -78,11 +85,19 @@ class Client(commands.Bot):
                         f"`{message.content}`"
                         for attach in message.attachments:
                             mess += f"{attach.url}\n"
-                        await member.send(mess)
+                        try:
+                            await member.send(mess)
+                        except Exception:
+                            logger.warning(f"Can't send message in {message.channel} channel.")
+                            logger.warning(f"Message author: {message.author}")
                     else:
-                        await member.send(
-                            f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
-                        )
+                        try:
+                            await member.send(
+                                f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
+                            )
+                        except Exception:
+                            logger.warning(f"Can't send message in {message.channel} channel.")
+                            logger.warning(f"Message author: {message.author}")
                     return
 
 

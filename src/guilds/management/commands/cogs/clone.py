@@ -124,7 +124,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
 
         locale_value = cache.get("clone")
 
-        if locale_value != {}:
+        if locale_value != {} and cache.get('clone') is not None:
             for server in self.progress:
                 if locale_value[server]["progres"] != self.progress[server]["progres"]:
                     self.top_clone_server = server
