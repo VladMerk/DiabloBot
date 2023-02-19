@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "users.apps.UsersConfig",
-    "social.apps.SocialConfig",
     "guilds.apps.GuildsConfig",
 ]
 
@@ -180,9 +179,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
 
-AUTHENTICATION_BACKENDS = [
-    "users.backends.DiscordBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
+# AUTHENTICATION_BACKENDS = [
+#     "users.backends.DiscordBackend",
+#     "django.contrib.auth.backends.ModelBackend",
+# ]
 
 LOGOUT_REDIRECT_URL = "/users/"
