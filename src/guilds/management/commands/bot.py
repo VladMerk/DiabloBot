@@ -32,13 +32,17 @@ class Client(commands.Bot):
 
         for member in server.members:
             if not member.bot:
-                _member, created = await sync_to_async(User.objects.get_or_create)(
-                    id=member.id,
-                    username=member.name,
-                    discriminator=member.discriminator,
-                )
-                if created:
-                    logger.info(f"Member {_member.username} is created.")
+                # FIXME почему не срабатывает "взять или создать" ?
+                try:
+                    _member, created = await sync_to_async(User.objects.get_or_create)(
+                        id=member.id,
+                        username=member.name,
+                        discriminator=member.discriminator,
+                    )
+                    if created:
+                        logger.info(f"Member {_member.username} is created.")
+                except Exception:
+                    logger.warning(f"User: {member} is not unique")
 
         for channel in server.channels:
             if channel.type != 4:
@@ -58,7 +62,6 @@ class Client(commands.Bot):
         await self.process_commands(message)
 
         if not message.author.bot:
-            logger.debug(f"Message channel: {message.channel}")
             logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")
 
         _data = await Settings.objects.afirst()
@@ -70,14 +73,12 @@ class Client(commands.Bot):
 
         if message.channel.id == _data.fasttrade_channel_id:
 
-            logger.debug(f"Member type: {message.author.bot}")
             if message.author.bot:
                 logger.debug(f"Bot leave message in {message.channel} channel.")
                 return
 
             server = self.get_guild(_data.id)
             role = nextcord.utils.get(server.roles, id=_data.fasttrade_channel_role_id)
-            logger.debug(role)
             for member in server.members:
                 if role in member.roles and message.author != member:
                     if len(message.attachments):
@@ -88,7 +89,7 @@ class Client(commands.Bot):
                         try:
                             await member.send(mess)
                         except Exception:
-                            logger.warning(f"Can't send message in {message.channel} channel.")
+                            logger.warning(f"Can't send message to {member} channel.")
                             logger.warning(f"Message author: {message.author}")
                     else:
                         try:
@@ -96,9 +97,8 @@ class Client(commands.Bot):
                                 f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
                             )
                         except Exception:
-                            logger.warning(f"Can't send message in {message.channel} channel.")
+                            logger.warning(f"Can't send message to {member} channel.")
                             logger.warning(f"Message author: {message.author}")
-                    return
 
 
 class Command(BaseCommand):
@@ -110,6 +110,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         intents = nextcord.Intents.default()
         intents.message_content = True
+        intents.members = True
         client = Client(command_prefix="!", intents=intents)
         client.load_extension("guilds.management.commands.cogs.terror")
         client.load_extension("guilds.management.commands.cogs.clone")

@@ -1,1 +1,4 @@
 fixtures/
+.coverage
+.flake8
+./src/db.sqlite3

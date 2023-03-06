@@ -133,3 +133,4 @@ fixtures/
 .vscode
 .flake8
 todo.txt
+static/
