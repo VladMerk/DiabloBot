@@ -17,12 +17,17 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         self.bot = bot
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
+        self.headers = {
+            'D2R-Contact': 'vladimirmerk@yandex.ru',
+            'D2R-Platform': 'https://discord.gg/qordes',
+            'D2R-Repo': 'https://github.com/VladMerk'
+        }
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url=self.url, params=self.params) as r:
+            async with session.get(url=self.url, params=self.params, headers=self.headers) as r:
                 if r.status == 200:
                     rjson = await r.json()
                     logger.info(f"New zone is {rjson['terrorZone']['zone']}")

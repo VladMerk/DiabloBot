@@ -16,6 +16,11 @@ class Clone(commands.Cog, name="Clone Diablo"):
         self.bot = bot
         self.url = "https://d2runewizard.com/api/diablo-clone-progress/all"
         self.params = {"token": settings.TOKEN_D2R}
+        self.headers = {
+            'D2R-Contact': 'vladimirmerk@yandex.ru',
+            'D2R-Platform': 'https://discord.gg/qordes',
+            'D2R-Repo': 'https://github.com/VladMerk'
+        }
         self.progress = {}
         self.flag = 0
         self.region = {1: "America", 2: "Europe", 3: "Asia"}
@@ -26,7 +31,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url=self.url, params=self.params) as r:
+            async with session.get(url=self.url, params=self.params, headers=self.headers) as r:
                 if r.status != 200:
                     logger.critical("D2R not connected.")
                     self.progress = None
