@@ -18,7 +18,7 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
         self.headers = {
-            'D2R-Contact': 'vladimirmerk@yandex.ru',
+            'D2R-Contact': 'qordes@gmail.com',
             'D2R-Platform': 'https://discord.gg/qordes',
             'D2R-Repo': 'https://github.com/VladMerk'
         }

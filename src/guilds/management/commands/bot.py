@@ -5,6 +5,7 @@ import redis
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.core.management.base import BaseCommand
+# from django.db.utils import IntegrityError
 from nextcord.ext import commands
 
 from guilds.models import Channels, Roles, Settings
@@ -33,6 +34,8 @@ class Client(commands.Bot):
         for member in server.members:
             if not member.bot:
                 # FIXME почему не срабатывает "взять или создать" ?
+                # TODO https://docs.djangoproject.com/en/4.1/ref/models/options/#unique-together
+                # TODO https://stackoverflow.com/questions/2201598/how-to-define-two-fields-unique-as-couple
                 try:
                     _member, created = await sync_to_async(User.objects.get_or_create)(
                         id=member.id,
@@ -41,6 +44,7 @@ class Client(commands.Bot):
                     )
                     if created:
                         logger.info(f"Member {_member.username} is created.")
+                # IntegrityError
                 except Exception:
                     logger.warning(f"User: {member} is not unique")
 
