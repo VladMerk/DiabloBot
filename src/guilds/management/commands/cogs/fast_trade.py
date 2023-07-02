@@ -1,4 +1,5 @@
 import logging
+import traceback
 from datetime import datetime
 
 from nextcord.ext import commands, tasks
@@ -17,6 +18,12 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
 
     @tasks.loop(seconds=60)
     async def fast_trade_messages(self):
+        try:
+            await self.process_fast_trade_messages()
+        except Exception as e:
+            logger.error(f"An error occured in 'fast_trade_messages': {e}\n {traceback.format_exc()}")
+
+    async def process_fast_trade_messages(self):
         _data = await Settings.objects.afirst()
         if _data is None:
             logger.warning("ID for fast_trade channel is not found in database.")
