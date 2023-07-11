@@ -45,39 +45,41 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
                 ):
                     await message.delete()
 
-    async def on_message(self, message: nextcord.message.Message):
-        await self.bot.process_commands(message)
+    # async def on_message(self, message: nextcord.message.Message):
+    #     await self.bot.process_commands(message)
+
+    #     print('New message in `fast_trade channel`')
 
         # _data = await Settings.objects.afirst()
 
-        if message.channel.id == self._data.fasttrade_channel_id:
+        # if message.channel.id == self._data.fasttrade_channel_id:
 
-            if message.author.bot:
-                logger.debug(f"Bot leave message in {message.channel} channel.")
-                return
+        #     if message.author.bot:
+        #         logger.debug(f"Bot leave message in {message.channel} channel.")
+        #         return
 
-            server = self.get_guild(self._data.id)
-            role = nextcord.utils.get(server.roles, id=self._data.fasttrade_channel_role_id)
-            for member in server.members:
-                if role in member.roles and message.author != member:
-                    if len(message.attachments):
-                        mess = f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:"
-                        f"`{message.content}`"
-                        for attach in message.attachments:
-                            mess += f"{attach.url}\n"
-                        try:
-                            await member.send(mess)
-                        except Exception:
-                            logger.warning(f"Can't send message to {member} channel.")
-                            logger.warning(f"Message author: {message.author}")
-                    else:
-                        try:
-                            await member.send(
-                                f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
-                            )
-                        except Exception:
-                            logger.warning(f"Can't send message to {member} channel.")
-                            logger.warning(f"Message author: {message.author}")
+        #     server = self.get_guild(self._data.id)
+        #     role = nextcord.utils.get(server.roles, id=self._data.fasttrade_channel_role_id)
+        #     for member in server.members:
+        #         if role in member.roles and message.author != member:
+        #             if len(message.attachments):
+        #                 mess = f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:"
+        #                 f"`{message.content}`"
+        #                 for attach in message.attachments:
+        #                     mess += f"{attach.url}\n"
+        #                 try:
+        #                     await member.send(mess)
+        #                 except Exception:
+        #                     logger.warning(f"Can't send message to {member} channel.")
+        #                     logger.warning(f"Message author: {message.author}")
+        #             else:
+        #                 try:
+        #                     await member.send(
+        #                         f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
+        #                     )
+        #                 except Exception:
+        #                     logger.warning(f"Can't send message to {member} channel.")
+        #                     logger.warning(f"Message author: {message.author}")
 
     @fast_trade_messages.before_loop
     async def befor_fast_trade(self):

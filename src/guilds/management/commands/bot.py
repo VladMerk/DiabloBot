@@ -75,6 +75,35 @@ class Client(commands.Bot):
             logger.debug(f"Message in {message.channel} channel is published.")
             return
 
+        if message.channel.id == _data.fasttrade_channel_id:
+
+            if message.author.bot:
+                logger.debug(f"Bot leave message in {message.channel} channel.")
+                return
+
+            server = self.get_guild(_data.id)
+            role = nextcord.utils.get(server.roles, id=_data.fasttrade_channel_role_id)
+            for member in server.members:
+                if role in member.roles and message.author != member:
+                    if len(message.attachments):
+                        mess = f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:"
+                        f"`{message.content}`"
+                        for attach in message.attachments:
+                            mess += f"{attach.url}\n"
+                        try:
+                            await member.send(mess)
+                        except Exception:
+                            logger.warning(f"Can't send message to {member} channel.")
+                            logger.warning(f"Message author: {message.author}")
+                    else:
+                        try:
+                            await member.send(
+                                f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
+                            )
+                        except Exception:
+                            logger.warning(f"Can't send message to {member} channel.")
+                            logger.warning(f"Message author: {message.author}")
+
 
 class Command(BaseCommand):
     help = "Runing bot command"
