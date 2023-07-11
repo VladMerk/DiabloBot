@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self._data = Settings.objects.first()
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
         self.headers = {
@@ -90,6 +91,15 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     @terror_zone.before_loop
     async def befor_terror_zone(self):
         await self.bot.wait_until_ready()
+
+    @commands.Cog.listener()
+    async def on_message(self, message: nextcord.message.Message):
+        await self.bot.process_commands(message)
+
+        if message.channel.id == self._data.terror_channel_id:
+            await message.publish()
+            logger.debug(f"Message in {message.channel} channel is published.")
+            return
 
 
 def setup(bot: commands.Bot):

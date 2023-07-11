@@ -1,5 +1,6 @@
 import logging
 
+import nextcord
 import aiohttp
 from django.conf import settings
 from django.core.cache import cache
@@ -14,6 +15,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
     def __init__(self, bot: commands.Bot):
         self.top_clone_server = None
         self.bot = bot
+        self._data = Settings.objects.first()
         self.url = "https://d2runewizard.com/api/diablo-clone-progress/all"
         self.params = {"token": settings.TOKEN_D2R}
         self.headers = {
@@ -150,6 +152,15 @@ class Clone(commands.Cog, name="Clone Diablo"):
     @clone.before_loop
     async def befor_clone(self):
         await self.bot.wait_until_ready()
+
+    @commands.Cog.listener()
+    async def on_message(self, message: nextcord.message.Message):
+        await self.bot.process_commands(message)
+
+        if message.channel.id == self._data.clone_channel_id:
+            await message.publish()
+            logger.debug(f"Message in {message.channel} channel is published.")
+            return
 
 
 def setup(bot: commands.Bot):
