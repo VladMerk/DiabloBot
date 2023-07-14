@@ -44,6 +44,7 @@ services:
       - /bin/sh
       - -c
       - |
+        python manage.py load_initial_data
         python manage.py runserver 0.0.0.0:8000
 
   bot:

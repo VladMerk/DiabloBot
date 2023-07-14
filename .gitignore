@@ -129,7 +129,6 @@ dmypy.json
 .pyre/
 
 
-fixtures/
 .vscode
 .flake8
 todo.txt
