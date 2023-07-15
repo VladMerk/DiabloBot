@@ -12,9 +12,9 @@ class DiscordUser(models.Model):
     joined_at = models.DateTimeField(default=datetime(2000, 1, 1, 10, 0, 0))
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.username}#{self.discriminator}"
 
     class Meta:
         verbose_name = "DiscordUser"
         verbose_name_plural = "DiscordUsers"
-        unique_together = [["id", "username"]]
+        unique_together = [["username", "discriminator"]]

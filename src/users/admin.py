@@ -3,4 +3,6 @@ from django.contrib.auth.models import User
 
 from .models import DiscordUser
 
-admin.site.register(DiscordUser)
+@admin.register(DiscordUser)
+class DiscordUserAdmin(admin.ModelAdmin):
+    search_fields = ['username']

@@ -44,16 +44,33 @@ class Client(commands.Bot):
         for member in server.members:
             try:
                 _member, created = await sync_to_async(DiscordUser.objects.get_or_create)(id=member.id,
-                                                                                      username=member.name,
-                                                                                      discriminator=member.discriminator,
-                                                                                      bot=member.bot,
-                                                                                      joined_at=member.joined_at)
+                                                                                      defaults={
+                                                                                          'username': member.display_name,
+                                                                                          'discriminator': member.discriminator,
+                                                                                          'bot': member.bot,
+                                                                                          'joined_at': member.joined_at,
+                                                                                      })
             except IntegrityError as i:
                 logger.warning(f"User {member.name} already in database.\n{i}")
             except Exception as e:
                 logger.warning(f"Exception in added user {member.name} in database")
             if created:
                 logger.debug(f"Added user {member.name} in database")
+            # try:
+            #     user = await DiscordUser.objects.aget(username=member.name, discriminator=member.discriminator)
+            # except DiscordUser.DoesNotExist:
+            #     try:
+            #         user = DiscordUser(id=member.id,
+            #                         username=member.name,
+            #                         discriminator=member.discriminator,
+            #                         bot=member.bot,
+            #                         joined_at=member.joined_at)
+            #         await sync_to_async(user.save)()
+            #         logger.warning(f"User {member.name} added in database")
+            #     except IntegrityError as i:
+            #         logger.warning(f"User {member.name} already in database:\n{i}")
+            #     except Exception as e:
+            #         logger.warning(f"Exception in added in database:\n{e}")
 
         logger.info(f"Logged in as {self.user} (ID: {self.user.id}) on server {server.name}")
 

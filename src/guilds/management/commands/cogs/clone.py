@@ -15,7 +15,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
     def __init__(self, bot: commands.Bot):
         self.top_clone_server = None
         self.bot = bot
-        self._data = Settings.objects.first()
+        # self._data = Settings.objects.first()
         self.url = "https://d2runewizard.com/api/diablo-clone-progress/all"
         self.params = {"token": settings.TOKEN_D2R}
         self.headers = {
@@ -160,6 +160,8 @@ class Clone(commands.Cog, name="Clone Diablo"):
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
         await self.bot.process_commands(message)
+
+        self._data = await Settings.objects.afirst()
 
         if message.channel.id == self._data.clone_channel_id:
             await message.publish()
