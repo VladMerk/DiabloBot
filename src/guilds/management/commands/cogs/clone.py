@@ -117,7 +117,11 @@ class Clone(commands.Cog, name="Clone Diablo"):
             return
 
         data = await Settings.objects.afirst()
-        channel_id = data.clone_channel_id
+        try:
+            channel_id = data.clone_channel_id
+        except Exception as e:
+            logger.warning(f"Exception: {e}")
+            return
 
         if channel_id is None:
             logger.warning("ID for clone channel not found in database.")

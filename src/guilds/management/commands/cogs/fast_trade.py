@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 class FastTrade(commands.Cog, name="Fast Trade Channel"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self._data = Settings.objects.first()
         self.fast_trade_messages.start()
         logger.debug("Cog 'Fast Trade' is loaded.")
 
@@ -25,11 +24,16 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
             logger.error(f"An error occured in 'fast_trade_messages': {e}\n {traceback.format_exc()}")
 
     async def process_fast_trade_messages(self):
+        self._data = await Settings.objects.afirst()
         if self._data is None:
             logger.warning("Settings is not found in database.")
             return
+
         channel_id = self._data.fasttrade_channel_id
         channel = self.bot.get_channel(channel_id)
+        if channel is None:
+            logger.warning("Fast Trade Channel is not found in database")
+            return
 
         if messages := [message async for message in channel.history()]:
             for message in messages:
@@ -44,8 +48,6 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
         await self.bot.process_commands(message)
 
         if message.channel.id == self._data.fasttrade_channel_id:
-            logger.debug('Message in fast_trade channel')
-
             if message.author.bot:
                 logger.debug(f"Bot leave message in {message.channel} channel.")
                 return

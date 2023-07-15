@@ -1,39 +1,20 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
-
-from . import utils
-from .managers import DiscordManager
+from datetime import datetime
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    id = models.BigAutoField(primary_key=True)
+
+class DiscordUser(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=200, unique=True)
     discriminator = models.CharField(max_length=50, blank=True)
-    email = models.EmailField(blank=True, null=True)
-    avatar = models.CharField(max_length=150, blank=True, null=True)
-    locale = models.CharField(max_length=50, blank=True, null=True)
-    flags = models.IntegerField(blank=True, null=True)
-    messages = models.PositiveIntegerField(default=0)
-    level = models.PositiveIntegerField(default=1)
-    cookies = models.PositiveIntegerField(default=0)
-
-    password = models.CharField(max_length=128)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    objects = DiscordManager()
-
-    USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = []
+    bot = models.BooleanField(blank=True, default=False)
+    joined_at = models.DateTimeField(default=datetime(2000, 1, 1, 10, 0, 0))
 
     def __str__(self):
-        return f"{self.username}#{self.discriminator}" if self.discriminator else self.username
-
-    def save(self, *args, **kwargs):
-        self.level = utils.get_level(self.messages)
-        super(User, self).save(*args, **kwargs)
+        return f"{self.username}"
 
     class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
-        ordering = ["level", "username"]
+        verbose_name = "DiscordUser"
+        verbose_name_plural = "DiscordUsers"
+        unique_together = [["id", "username"]]

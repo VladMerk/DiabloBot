@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self._data = Settings.objects.first()
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
         self.headers = {
@@ -25,6 +24,9 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         }
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
+
+    async def get_settings(self):
+        return await Settings.objects.afirst()
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
@@ -37,21 +39,11 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                     logger.warning("Connection error in terror zone function")
                     return None
 
-    async def _get_max_time(self):
-        data = await Settings.objects.afirst()
-        if data is None:
-            logger.warning("Max time is not find in database.")
-            return None
-        return data.max_time
-
     @tasks.loop(seconds=30)
     async def terror_zone(self):
-        _time = await self._get_max_time()
-        if _time is None:
-            logger.warning("Max time not found.")
-            return
+        self._data = await self.get_settings()
 
-        if datetime.now().minute not in range(2, _time):
+        if datetime.now().minute not in range(2, self._data.max_time):
             return
 
         zone = await self.get_json()
@@ -64,10 +56,7 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
             return
 
         if cache.get("zone") is None or zone != cache.get("zone"):
-            _data = await Settings.objects.afirst()
-
-            server_id = _data.id
-            server = self.bot.get_guild(server_id)
+            server = self.bot.get_guild(self._data.id)
 
             _zone = await TerrorZones.objects.select_related().filter(key=zone).afirst()
             logger.debug(f"{_zone}")
@@ -83,7 +72,10 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                     zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
                     message += f"\n\n{zone_role.mention}"
 
-                channel = self.bot.get_channel(_data.terror_channel_id)
+                channel = self.bot.get_channel(self._data.terror_channel_id)
+                if channel is None:
+                    logger.warning("Channel is not found in database")
+                    return
 
                 await channel.send(message)
                 cache.set("zone", zone)
@@ -95,6 +87,8 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
         await self.bot.process_commands(message)
+
+        self._data = await self.get_settings()
 
         if message.channel.id == self._data.terror_channel_id:
             await message.publish()
