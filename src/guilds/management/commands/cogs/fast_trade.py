@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 class FastTrade(commands.Cog, name="Fast Trade Channel"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        # self.time_to_delete_message = 20
         self._data = Settings.objects.first()
         self.fast_trade_messages.start()
         logger.debug("Cog 'Fast Trade' is loaded.")
@@ -26,8 +25,6 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
             logger.error(f"An error occured in 'fast_trade_messages': {e}\n {traceback.format_exc()}")
 
     async def process_fast_trade_messages(self):
-        # _data = await Settings.objects.afirst()
-
         if self._data is None:
             logger.warning("Settings is not found in database.")
             return
@@ -37,9 +34,6 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
         if messages := [message async for message in channel.history()]:
             for message in messages:
                 if (
-                    # TODO удалить попозже
-                    # int(message.created_at.timestamp()) + self.time_to_delete_message * 60 <= datetime.now().timestamp()
-                    # and not message.pinned
                     int(message.created_at.timestamp()) + self._data.fasttrade_channel_time * 60 <= datetime.now().timestamp()
                     and not message.pinned
                 ):
@@ -48,8 +42,6 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
         await self.bot.process_commands(message)
-
-        # _data = await Settings.objects.afirst()
 
         if message.channel.id == self._data.fasttrade_channel_id:
             logger.debug('Message in fast_trade channel')
