@@ -11,6 +11,8 @@ from nextcord.ext import commands
 from guilds.models import Channels, Roles, Settings
 from users.models import DiscordUser
 
+logging.getLogger('asyncio').setLevel(logging.INFO)
+logging.getLogger('nextcord').setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
@@ -56,29 +58,18 @@ class Client(commands.Bot):
                 logger.warning(f"Exception in added user {member.name} in database")
             if created:
                 logger.debug(f"Added user {member.name} in database")
-            # try:
-            #     user = await DiscordUser.objects.aget(username=member.name, discriminator=member.discriminator)
-            # except DiscordUser.DoesNotExist:
-            #     try:
-            #         user = DiscordUser(id=member.id,
-            #                         username=member.name,
-            #                         discriminator=member.discriminator,
-            #                         bot=member.bot,
-            #                         joined_at=member.joined_at)
-            #         await sync_to_async(user.save)()
-            #         logger.warning(f"User {member.name} added in database")
-            #     except IntegrityError as i:
-            #         logger.warning(f"User {member.name} already in database:\n{i}")
-            #     except Exception as e:
-            #         logger.warning(f"Exception in added in database:\n{e}")
 
-        logger.info(f"Logged in as {self.user} (ID: {self.user.id}) on server {server.name}")
+        logger.info(f"Logged in as {self.user.name} (ID: {self.user.id}) on server {server.name}")
 
     async def on_message(self, message: nextcord.message.Message):
         await self.process_commands(message)
 
         if not message.author.bot:
             logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")
+
+    async def on_command_error(self, ctx, error):
+        logger.debug("Send unknown commands")
+        await ctx.send("Неизвестная команда.\nВоспользуйтесь командой `!help`")
 
 
 class Command(BaseCommand):
@@ -95,4 +86,5 @@ class Command(BaseCommand):
         client.load_extension("guilds.management.commands.cogs.terror")
         client.load_extension("guilds.management.commands.cogs.clone")
         client.load_extension("guilds.management.commands.cogs.fast_trade")
+        client.load_extension("guilds.management.commands.cogs.test_commands")
         client.run(settings.TOKEN)

@@ -86,7 +86,6 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
 
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
-        await self.bot.process_commands(message)
 
         self._data = await self.get_settings()
 
