@@ -15,7 +15,7 @@ class DiscordUserAdmin(admin.ModelAdmin):
         (
             " ",
             {
-                "fields": ("bot", "joined_at"),
+                "fields": ("bot", "joined_at", "removed_at"),
             }
         ),
         (
@@ -26,7 +26,7 @@ class DiscordUserAdmin(admin.ModelAdmin):
         ),
     )
     search_fields = ['username']
-    readonly_fields = ['id', 'username', 'discriminator', 'bot', 'roles', 'joined_at']
+    readonly_fields = ['id', 'username', 'discriminator', 'bot', 'roles', 'joined_at', 'removed_at']
     list_display = ("username", "joined_at")
     list_filter = ("joined_at",)
     ordering = ("-joined_at",)

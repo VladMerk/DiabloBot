@@ -35,9 +35,12 @@ class Client(commands.Bot):
         for channel in server.channels:
             if channel.type != 4:   # 4 - группа каналов
                 try:
-                    _channel, created = await sync_to_async(Channels.objects.get_or_create)(id=channel.id, name=channel.name)
+                    _channel, created = await sync_to_async(Channels.objects.get_or_create)(id=channel.id,
+                                                                                            defaults={
+                                                                                                "name": channel.name,                                                                                            }
+                                                                                            )
                 except IntegrityError:
-                    logger.warning("Channel already in database")
+                    logger.warning(f"Channel '{channel.name}' already in database")
                 if created:
                     logger.debug(f"Added Channel {channel.name} in database")
 
@@ -103,5 +106,5 @@ class Command(BaseCommand):
         client.load_extension("guilds.management.commands.cogs.manage_users")
         client.load_extension("guilds.management.commands.cogs.manage_roles")
         client.load_extension("guilds.management.commands.cogs.manage_channels")
-        
+
         client.run(settings.TOKEN)

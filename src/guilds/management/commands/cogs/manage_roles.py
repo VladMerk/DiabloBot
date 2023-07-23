@@ -17,7 +17,7 @@ class ManageRoles(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_role_create(self, role: nextcord.Role):
-        _role = await Roles.objects.acreate(id=role.id, name=role.name)
+        _role = Roles(id=role.id, name=role.name)
 
         await sync_to_async(_role.save)()
         logger.debug(f"Role {role.name} is created.")

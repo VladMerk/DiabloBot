@@ -162,9 +162,12 @@ class Clone(commands.Cog, name="Clone Diablo"):
         self._data = await Settings.objects.afirst()
 
         if message.channel.id == self._data.clone_channel_id:
-            await message.publish()
+            try:
+                await message.publish()
+            except Exception as e:
+                logger.warning(f"Не удалось опубликовать сообщение. Причина:\n{e}")
+                return
             logger.debug(f"Message in {message.channel} channel is published.")
-            return
 
 
 def setup(bot: commands.Bot):

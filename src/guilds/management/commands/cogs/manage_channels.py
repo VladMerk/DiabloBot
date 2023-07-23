@@ -17,8 +17,8 @@ class ManageChannels(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self, channel: nextcord.abc.GuildChannel):
-        _channel = await Channels.objects.acreate(id=channel.id,
-                                                  name=channel.name)
+        _channel = Channels(id=channel.id,
+                            name=channel.name)
 
         await sync_to_async(_channel.save)()
         logger.debug(f"Channel {channel.name} is created in database")

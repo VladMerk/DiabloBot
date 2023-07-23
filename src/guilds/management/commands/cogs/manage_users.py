@@ -15,7 +15,7 @@ class ManageUsers(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        logger.debug("Cog 'Users' is loaded")
+        logger.debug("Cog 'ManageUsers' is loaded")
 
     @commands.command(name='update_users', help='Update users of guild')
     @commands.has_any_role("Администратор")
@@ -51,15 +51,14 @@ class ManageUsers(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member: nextcord.Member):
         """Event когда пользователь подключается к серверу"""
-        _member = await DiscordUser.objects.acreate(
-            id=member.id,
-            username=member.name,
-            discriminator=member.discriminator,
-            bot=member.bot,
-            joined_at=member.joined_at,
-        )
+        _member = DiscordUser(id=member.id,
+                              username=member.name,
+                              discriminator=member.discriminator,
+                              bot=member.bot,
+                              joined_at=member.joined_at,
+                            )
         for role in member.roles:
-            _role = await Roles.objects.aget(role.name)
+            _role = await Roles.objects.aget(name=role.name)
             await sync_to_async(_member.roles.add)(_role)
 
         await sync_to_async(_member.save)()
@@ -72,7 +71,7 @@ class ManageUsers(commands.Cog):
             _member = await DiscordUser.objects.aget(id=member.id,
                                            username=member.name)
         except Exception as e:
-            logger.warning(f"User not found: \n{e}")
+            logger.warning(f"User {member.name} not found: \n{e}")
             return
 
         _member.removed_at = now()
@@ -91,7 +90,7 @@ class ManageUsers(commands.Cog):
         try:
             _member = await DiscordUser.objects.aget(id=old.id, username=old.name)
         except Exception as e:
-            logger.warning(f"User not found in database: \n{e}")
+            logger.warning(f"User {old.name} not found in database: \n{e}")
             return
 
         _member.username = new.name
