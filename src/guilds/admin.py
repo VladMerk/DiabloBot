@@ -2,10 +2,6 @@ from django.contrib import admin
 
 from .models import Channels, Roles, Settings, TerrorZones
 
-# admin.site.register(Settings)
-admin.site.register(Roles)
-admin.site.register(Channels)
-
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):
@@ -53,3 +49,13 @@ class TerrorZonesAdmin(admin.ModelAdmin):
     )
     list_filter = ("act",)
     list_display_links = ("name_en",)
+
+@admin.register(Roles)
+class RolesAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'name')
+    ordering = ['id']
+
+
+@admin.register(Channels)
+class ChannelsAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'name')

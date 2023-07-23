@@ -1,7 +1,7 @@
 import logging
 
-import nextcord
 import aiohttp
+import nextcord
 from django.conf import settings
 from django.core.cache import cache
 from nextcord.ext import commands, tasks

@@ -1,6 +1,7 @@
-import nextcord
 import logging
+
 from nextcord.ext import commands
+
 from guilds.models import Settings
 
 logger = logging.getLogger(__name__)
@@ -9,9 +10,10 @@ logger = logging.getLogger(__name__)
 class CollectDataCog(commands.Cog, name='Collect commands'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        logger.debug("Cog 'Collect Data is loaded")
+        logger.debug("Cog 'Collect Data' is loaded")
 
     @commands.command(name='collect', help='Collect messages from work channel')
+    @commands.has_role("Администратор")
     async def collect(self, ctx, limit=None):
 
         guild_id = await Settings.objects.afirst()

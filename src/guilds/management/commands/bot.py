@@ -34,29 +34,41 @@ class Client(commands.Bot):
 
         for channel in server.channels:
             if channel.type != 4:   # 4 - группа каналов
-                _channel, created = await sync_to_async(Channels.objects.get_or_create)(id=channel.id, name=channel.name)
+                try:
+                    _channel, created = await sync_to_async(Channels.objects.get_or_create)(id=channel.id, name=channel.name)
+                except IntegrityError:
+                    logger.warning("Channel already in database")
                 if created:
                     logger.debug(f"Added Channel {channel.name} in database")
 
         for role in server.roles:
-            _role, created = await sync_to_async(Roles.objects.get_or_create)(id=role.id, name=role.name)
+            try:
+                _role, created = await sync_to_async(Roles.objects.get_or_create)(id=role.id, name=role.name)
+            except IntegrityError:
+                logger.warning("Role already in database")
             if created:
                 logger.debug(f"Added role {role.name} in database")
 
         for member in server.members:
             try:
                 _member, created = await sync_to_async(DiscordUser.objects.get_or_create)(id=member.id,
-                                                                                      defaults={
-                                                                                          'username': member.display_name,
-                                                                                          'discriminator': member.discriminator,
-                                                                                          'bot': member.bot,
-                                                                                          'joined_at': member.joined_at,
-                                                                                      })
+                                                                                          defaults={
+                                                                                                'username': member.name,
+                                                                                                'discriminator': member.discriminator,
+                                                                                                'bot': member.bot,
+                                                                                                'joined_at': member.joined_at,
+                                                                                            })
             except IntegrityError as i:
                 logger.warning(f"User {member.name} already in database.\n{i}")
+                continue
             except Exception as e:
-                logger.warning(f"Exception in added user {member.name} in database")
+                logger.warning(f"Exception in added user {member.name} in database: \n{e}")
+                continue
             if created:
+                for role in member.roles:
+                    _role = await sync_to_async(Roles.objects.get)(name=role.name)
+                    await sync_to_async(_member.roles.add)(_role)
+                await sync_to_async(_member.save)()
                 logger.debug(f"Added user {member.name} in database")
 
         logger.info(f"Logged in as {self.user.name} (ID: {self.user.id}) on server {server.name}")
@@ -68,7 +80,7 @@ class Client(commands.Bot):
             logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")
 
     async def on_command_error(self, ctx, error):
-        logger.debug("Send unknown commands")
+        logger.debug(f"Send unknown commands. Error: \n{error}")
         await ctx.send("Неизвестная команда.\nВоспользуйтесь командой `!help`")
 
 
@@ -83,8 +95,13 @@ class Command(BaseCommand):
         intents.message_content = True
         intents.members = True
         client = Client(command_prefix="!", intents=intents)
+
         client.load_extension("guilds.management.commands.cogs.terror")
         client.load_extension("guilds.management.commands.cogs.clone")
         client.load_extension("guilds.management.commands.cogs.fast_trade")
         client.load_extension("guilds.management.commands.cogs.test_commands")
+        client.load_extension("guilds.management.commands.cogs.manage_users")
+        client.load_extension("guilds.management.commands.cogs.manage_roles")
+        client.load_extension("guilds.management.commands.cogs.manage_channels")
+        
         client.run(settings.TOKEN)

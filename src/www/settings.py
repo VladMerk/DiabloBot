@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -92,7 +92,6 @@ DATABASES = {
 }
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -128,7 +127,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "[{levelname:^10s}] [{asctime}] {module:^10s} [{filename:>10s}:{lineno:<3d}] {message}",
+            "format": "[{levelname:^10s}] [{asctime}] {module:^15s} [{filename:>20s}:{lineno:<3d}] {message}",
             "style": "{",
         },
     },

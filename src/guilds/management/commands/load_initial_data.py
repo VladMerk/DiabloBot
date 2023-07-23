@@ -1,7 +1,8 @@
 import logging
-from typing import Any, Optional
-from django.core.management.base import BaseCommand
+from typing import Any
+
 from django.core.management import call_command
+from django.core.management.base import BaseCommand
 
 logger = logging.getLogger(__name__)
 
