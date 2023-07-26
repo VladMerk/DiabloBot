@@ -25,7 +25,7 @@ class DiscordUserAdmin(admin.ModelAdmin):
             }
         ),
     )
-    search_fields = ['username']
+    search_fields = ['id', 'username']
     readonly_fields = ['id', 'username', 'discriminator', 'bot', 'roles', 'joined_at', 'removed_at']
     list_display = ("username", "joined_at")
     list_filter = ("joined_at",)

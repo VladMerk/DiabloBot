@@ -77,7 +77,8 @@ class Client(commands.Bot):
         logger.info(f"Logged in as {self.user.name} (ID: {self.user.id}) on server {server.name}")
 
     async def on_message(self, message: nextcord.message.Message):
-        await self.process_commands(message)
+        # FIXME раскоментировать, когда команды заработают.
+        # await self.process_commands(message)
 
         if not message.author.bot:
             logger.debug(f"Member {message.author} in {message.channel} channel leave message: {message.content}")

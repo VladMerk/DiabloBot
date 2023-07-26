@@ -57,6 +57,8 @@ class ManageUsers(commands.Cog):
                               bot=member.bot,
                               joined_at=member.joined_at,
                             )
+        await sync_to_async(_member.save)()
+        
         for role in member.roles:
             _role = await Roles.objects.aget(name=role.name)
             await sync_to_async(_member.roles.add)(_role)
