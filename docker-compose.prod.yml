@@ -1,0 +1,66 @@
+version: "3"
+
+networks:
+  bot_net:
+
+volumes:
+  redis_vol:
+  backend_vol:
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    networks:
+      bot_net:
+    expose:
+      - "6379"
+    volumes:
+      - redis_vol:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    image: vladmerk/django-bot:devel
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+    restart: always
+    env_file:
+      - .env
+    networks:
+      bot_net:
+    depends_on:
+      redis:
+        condition: service_healthy
+    command:
+      - /bin/sh
+      - -c
+      - |
+        python manage.py migrate
+        python manage.py collectstatic
+        gunicorn --bind :8000 -w 3 www.wsgi:application
+
+  bot:
+    image: vladmerk/django-bot:devel
+    container_name: bot
+    env_file:
+      - .env
+    volumes_from:
+      - "backend"
+    networks:
+      bot_net:
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    command: python manage.py bot

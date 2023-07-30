@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock  %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Users</h1>
+            {% if user.is_authenticated %}
+                <a href="{% url 'users:logout' %}">Выйти</a>
+                <p>{{user.id}}</p>
+                <p>{{user.username }}</p>
+                <p>{{user.discriminator}}</p>
+                <p>{{user.email}}</p>
+                <p>{{user.flags}}</p>
+                <p>{{user.avatar}}</p>
+            {% else %}
+                <h4>User is not authenticated</h4>
+                <p><a href="{% url 'admin:login' %}">Войти в админ-сайт</a></p>
+                <p><a href="{% url 'users:discord_login' %}">Войти через дискорд</a></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock  %}

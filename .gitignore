@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+.vscode
+.flake8
+todo.txt
+static/
