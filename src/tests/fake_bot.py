@@ -11,12 +11,14 @@ from .fake_guild import FakeGuild
 class FakeBot(Client):
 
     def __init__(self):
-        self.guild = FakeGuild()
-
+        self._guilds = []
 
     @property
     def guilds(self) -> List[Guild]:
-        return [self.guild]
+        return self._guilds
+
+    def add_guild(self, guild: FakeGuild):
+        self._guilds.append(guild)
 
     @property
     def user(self):

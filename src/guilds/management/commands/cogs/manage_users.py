@@ -58,9 +58,13 @@ class ManageUsers(commands.Cog):
                               joined_at=member.joined_at,
                             )
         await sync_to_async(_member.save)()
-        
+
         for role in member.roles:
-            _role = await Roles.objects.aget(name=role.name)
+            try:
+                _role = await Roles.objects.aget(id=role.id)
+            except Exception as e:
+                logger.warning(f"Role {role.id}#{role.name} not found in database")
+                continue
             await sync_to_async(_member.roles.add)(_role)
 
         await sync_to_async(_member.save)()
@@ -70,10 +74,9 @@ class ManageUsers(commands.Cog):
     async def on_member_remove(self, member: nextcord.Member):
         """Event когда пользователь уходит с сервера"""
         try:
-            _member = await DiscordUser.objects.aget(id=member.id,
-                                           username=member.name)
+            _member = await DiscordUser.objects.aget(id=member.id)
         except Exception as e:
-            logger.warning(f"User {member.name} not found: \n{e}")
+            logger.warning(f"User {member.name} with #{member.id} not found: \n{e}")
             return
 
         _member.removed_at = now()
@@ -83,16 +86,16 @@ class ManageUsers(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, old: nextcord.Member, new: nextcord.Member):
-        """Event когда пользователь обновляет свои данные.
+        """Event когда пользователь обновляет свои данные в гильдии дискорда.
            Обновляемые данные в этом эвенте:
                 - nickname
                 - roles
                 - pending
         """
         try:
-            _member = await DiscordUser.objects.aget(id=old.id, username=old.name)
+            _member = await DiscordUser.objects.aget(id=old.id)
         except Exception as e:
-            logger.warning(f"User {old.name} not found in database: \n{e}")
+            logger.warning(f"Member {old.name} with #{old.id} not found in database: \n{e}")
             return
 
         _member.username = new.name
@@ -100,11 +103,35 @@ class ManageUsers(commands.Cog):
         await sync_to_async(_member.roles.clear)()
 
         for role in new.roles:
-            _role = await Roles.objects.aget(id=role.id, name=role.name)
+            try:
+                _role = await Roles.objects.aget(id=role.id)
+            except Exception as e:
+                logger.warning(f"Role {role.id}#{role.name} not found in database")
+                continue
             await sync_to_async(_member.roles.add)(_role)
 
         await sync_to_async(_member.save)()
-        logger.debug(f"Member {new.name} is updated.")
+        logger.debug(f"Member {new.name} with #{new.id} is updated.")
+
+    @commands.Cog.listener()
+    async def on_user_update(self, old: nextcord.User, new: nextcord.User):
+        """Event когда пользователь обновляет данные профиля дискорда.
+           Обновляемые данные при этом:
+                - avatar
+                - name
+                - discriminator
+                """
+        try:
+            _member = await DiscordUser.objects.aget(id=old.id)
+        except Exception as e:
+            logger.warning(f"User {old.name} with #{old.id} not found in database:\n{e}")
+            return
+
+        _member.username = new.name
+        _member.discriminator = new.discriminator
+
+        await sync_to_async(_member.save)()
+        logger.debug(f"User {new.name}#{new.discriminator} with #{new.id} is updated")
 
 
 def setup(bot: commands.Bot):

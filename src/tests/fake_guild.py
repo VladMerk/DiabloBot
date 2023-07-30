@@ -27,80 +27,96 @@ class FakeRole(nextcord.Role):
 
 
 class FakeMember:
-
-    # def __init__(self, guild, data: dict) -> None:
-    #     super().__init__(state=None, guild=guild, data=data)
-    def __init__(self, data: dict) -> None:
-        self._data = data
+    def __init__(self, id: int,
+                        name: str,
+                        display_name: str,
+                        discriminator: int,
+                        bot: bool,
+                        joined_at: datetime,
+                        removed_at: Optional[datetime],
+                        roles: list[FakeRole]) -> None:
+        self._id = id
+        self._name = name
+        self._display_name = display_name
+        self._discriminator = discriminator
+        self._bot = bot
+        self._joined_at = joined_at
+        self._removed_at = removed_at
+        self._roles = roles
 
     def __str__(self):
         return self.name
 
     @property
     def id(self) -> int:
-        return self._data.get('id')
+        return self._id
 
     @property
     def name(self) -> str:
-        return self._data.get('name')
+        return self._name
 
     @property
     def display_name(self) -> str:
-        return self._data.get('display_name')
+        return self._display_name
 
     @property
     def discriminator(self) -> str:
-        return self._data.get('discriminator')
+        return self._discriminator
 
     @property
     def bot(self) -> bool:
-        return self._data.get('bot')
+        return self._bot
 
     @property
     def joined_at(self) -> datetime:
-        return self._data.get('joined_at')
+        return self._joined_at
+
+    @property
+    def removed_at(self) -> Optional[datetime]:
+        return self._removed_at
+
+    @property
+    def roles(self) -> List[FakeRole]:
+        return self._roles
 
 
 class FakeGuild(nextcord.Guild):
     def __init__(self, *args, **kwargs):
         self.id = 1234567890
         self.name = 'TestDiabloBotGuild'
+        self._channels = []
+        self._roles = []
+        self._members = []
 
     @property
     def channels(self) -> List[GuildChannel]:
-        channel1 = FakeChannel(665544, 'clone_channel')
-        channel2 = FakeChannel(665588, 'terror_channel')
-        channel3 = FakeChannel(665577, 'fast_trade_channel')
-        return [channel1, channel2, channel3]
+        return self._channels
+
+    def add_channel(self, id:int, name: str):
+        self._channels.append(FakeChannel(id=id, name=name))
 
     @property
     def members(self) -> List[Member]:
-        member_list = []
-        for i in range(1, 4):
-            data = {
-                'id':99887700+i,
-                'name': f'User {i}',
-                'display_name': f'User {i}',
-                'discriminator': f'445{i}',
-                'bot':False,
-                'joined_at':timezone.make_aware(timezone.datetime(2000, i, 1, 10, 0, 0),
-                                                timezone.get_current_timezone())
-            }
-            member = FakeMember(data=data)
-            member_list.append(member)
-        return member_list
+        return self._members
+
+    def add_member(self, id: int, name: str, display_name: str,
+                   discriminator: int, bot: bool, joined_at: datetime,
+                   removed_at: Optional[datetime], roles: List[FakeRole]) -> None:
+        self._members.append(
+            FakeMember(id=id, name=name, display_name=display_name,
+                       discriminator=discriminator, bot=bot, joined_at=joined_at,
+                       removed_at=removed_at, roles=roles)
+        )
 
     @property
     def roles(self) -> List[Role]:
-        everyone = FakeRole(id=0, name='everyone')
-        administator = FakeRole(id=1, name='Administrator')
-        moderator = FakeRole(id=2, name='Moderator')
+        return self._roles
 
-        return [
-            everyone,
-            administator,
-            moderator
-        ]
+    def add_role(self, role: FakeRole):
+        self._roles.append(role)
+
+    def add_roles(self, roles: List[FakeRole]):
+        self._roles.extend(roles)
 
     def member_count(self) -> int | None:
         return len(self.members)

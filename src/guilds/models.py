@@ -40,7 +40,7 @@ class Settings(models.Model):
 
 class Channels(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -49,6 +49,7 @@ class Channels(models.Model):
         verbose_name = "Channels"
         verbose_name_plural = "Channels"
         ordering = ["name"]
+        unique_together = [['id', 'name']]
 
 
 class Roles(models.Model):
