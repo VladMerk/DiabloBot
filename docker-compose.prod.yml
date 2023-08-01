@@ -5,7 +5,6 @@ networks:
 
 volumes:
   redis_vol:
-  backend_vol:
 
 services:
   redis:
@@ -26,12 +25,12 @@ services:
       start_period: 30s
 
   backend:
-    image: vladmerk/django-bot:devel
+    image: vladmerk/django-bot:graphics
     container_name: backend
+    volumes:
+        - ./src/db.sqlite3:/app/db.sqlite3
     ports:
       - "8000:8000"
-    volumes:
-      - ./db.sqlite3:/app/db.sqlite3
     restart: always
     env_file:
       - .env
@@ -44,12 +43,13 @@ services:
       - /bin/sh
       - -c
       - |
+        python manage.py makemigrations
         python manage.py migrate
-        python manage.py collectstatic
+        python manage.py load_initial_data
         gunicorn --bind :8000 -w 3 www.wsgi:application
 
   bot:
-    image: vladmerk/django-bot:devel
+    image: vladmerk/django-bot:graphics
     container_name: bot
     env_file:
       - .env
