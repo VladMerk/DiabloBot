@@ -1,7 +1,5 @@
 import logging
 
-from asgiref.sync import sync_to_async
-
 import plotly.graph_objects as go
 from django.db.models import Min
 from django.db.models.functions import TruncDate

@@ -28,7 +28,7 @@ services:
 
   backend:
     build: .
-    image: vladmerk/django-bot:devel
+    image: vladmerk/django-bot:graphics
     container_name: backend
     volumes:
       - ./src:/app/
@@ -52,7 +52,7 @@ services:
         python manage.py runserver 0.0.0.0:8000
 
   bot:
-    image: vladmerk/django-bot:devel
+    image: vladmerk/django-bot:graphics
     container_name: bot
     env_file:
       - .env
