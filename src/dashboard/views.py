@@ -21,7 +21,7 @@ def index(request):
         if form.is_valid():
             start_date = (form.cleaned_data.get('start_date')
                           or DiscordUser.objects.aggregate(min_date=Min('joined_at')).get('min_date'))
-            end_date = form.cleaned_data.get('end_date') or timezone.now()
+            end_date = form.cleaned_data.get('end_date') or timezone.now().date()
 
             if r := form.cleaned_data.get('roles'):
                 users = users.filter(roles__in=r)
@@ -46,9 +46,19 @@ def filter_and_group_users(users: QuerySet,
                            end_date: datetime.datetime):
     users_filtered = users.filter(**{f"{date_field}__date__range": [start_date, end_date]}).values('id', date_field)
     users_df = pd.DataFrame(users_filtered)
-    users_df[date_field] = pd.to_datetime(users_df[date_field]).dt.date
-    users_grouped = users_df.groupby(date_field).agg({'id': 'count'}).fillna(0)
-    users_grouped.columns = [date_field]
+
+
+    if not users_df.get(date_field, pd.DataFrame()).empty:
+        users_df[date_field] = pd.to_datetime(users_df[date_field]).dt.date
+        users_grouped = users_df.groupby(date_field).agg({'id': 'count'}).fillna(0)
+        users_grouped.columns = [date_field]
+    else:
+        start_date = pd.Timestamp(start_date.strftime('%Y-%m-%d'))
+        end_date = pd.Timestamp(end_date.strftime('%Y-%m-%d'))
+        
+        all_dates = pd.date_range(start_date, end_date, freq='D')
+        users_grouped = pd.DataFrame({f"{date_field}": [0]*len(all_dates)}, index=all_dates)
+
     return users_grouped
 
 
