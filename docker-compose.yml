@@ -35,6 +35,8 @@ services:
     ports:
       - "8000:8000"
     restart: always
+    environment:
+      - DEBUG=1
     env_file:
       - .env
     networks:
@@ -54,6 +56,8 @@ services:
   bot:
     image: vladmerk/django-bot:graphics
     container_name: bot
+    environment:
+      - DEBUG=1
     env_file:
       - .env
     volumes_from:
