@@ -21,7 +21,9 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
         try:
             await self.process_fast_trade_messages()
         except Exception as e:
-            logger.error(f"An error occured in 'fast_trade_messages': {e}\n {traceback.format_exc()}")
+            logger.error(
+                f"An error occured in 'fast_trade_messages': {e}\n {traceback.format_exc()}"
+            )
 
     async def process_fast_trade_messages(self):
         self._data = await Settings.objects.afirst()
@@ -38,14 +40,15 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
         if messages := [message async for message in channel.history()]:
             for message in messages:
                 if (
-                    int(message.created_at.timestamp()) + self._data.fasttrade_channel_time * 60 <= datetime.now().timestamp()
+                    int(message.created_at.timestamp())
+                    + self._data.fasttrade_channel_time * 60
+                    <= datetime.now().timestamp()
                     and not message.pinned
                 ):
                     await message.delete()
 
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
-
         if message.channel.id != self._data.fasttrade_channel_id:
             return
         if message.author.bot:
@@ -69,7 +72,8 @@ class FastTrade(commands.Cog, name="Fast Trade Channel"):
                 else:
                     try:
                         await member.send(
-                            f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:" f" `{message.content}`"
+                            f"{message.author.mention} в канале {message.channel.mention} оставил сообщение:"
+                            f" `{message.content}`"
                         )
                     except Exception:
                         logger.warning(f"Can't send message to {member} channel.")

@@ -30,7 +30,11 @@ class SettingsAdmin(admin.ModelAdmin):
         (
             "Fast Trade Channel",
             {
-                "fields": ("fasttrade_channel", "fasttrade_channel_role", "fasttrade_channel_time"),
+                "fields": (
+                    "fasttrade_channel",
+                    "fasttrade_channel_role",
+                    "fasttrade_channel_time",
+                ),
             },
         ),
     )
@@ -50,12 +54,13 @@ class TerrorZonesAdmin(admin.ModelAdmin):
     list_filter = ("act",)
     list_display_links = ("name_en",)
 
+
 @admin.register(Roles)
 class RolesAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'name')
-    ordering = ['id']
+    readonly_fields = ("id", "name")
+    ordering = ["id"]
 
 
 @admin.register(Channels)
 class ChannelsAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'name')
+    readonly_fields = ("id", "name")

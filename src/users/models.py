@@ -10,7 +10,9 @@ class DiscordUser(models.Model):
     discriminator = models.CharField(max_length=50, blank=True)
     bot = models.BooleanField(blank=True, default=False)
     joined_at = models.DateTimeField(
-        default=timezone.make_aware(timezone.datetime(2000, 1, 1, 10, 0, 0), timezone.get_current_timezone())
+        default=timezone.make_aware(
+            timezone.datetime(2000, 1, 1, 10, 0, 0), timezone.get_current_timezone()
+        )
     )
     removed_at = models.DateTimeField(blank=True, null=True)
     roles = models.ManyToManyField(to=Roles)

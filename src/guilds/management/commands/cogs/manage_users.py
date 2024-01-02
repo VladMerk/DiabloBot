@@ -1,9 +1,9 @@
 import logging
-import nextcord
 
-from nextcord.ext import commands
+import nextcord
 from asgiref.sync import sync_to_async
 from django.utils.timezone import now
+from nextcord.ext import commands
 
 from guilds.models import Roles
 from users.models import DiscordUser
@@ -17,7 +17,7 @@ class ManageUsers(commands.Cog):
 
         logger.debug("Cog 'ManageUsers' is loaded")
 
-    @commands.command(name='update_users', help='Update users of guild')
+    @commands.command(name="update_users", help="Update users of guild")
     @commands.has_any_role("Администратор")
     async def update_users(self, ctx):
         guild_id = self.bot.guilds.pop().id
@@ -46,17 +46,18 @@ class ManageUsers(commands.Cog):
 
             logger.debug(f"Member {member.name} is updated.")
 
-        await ctx.send('Данные пользователей обновлены!')
+        await ctx.send("Данные пользователей обновлены!")
 
     @commands.Cog.listener()
     async def on_member_join(self, member: nextcord.Member):
         """Event когда пользователь подключается к серверу"""
-        _member = DiscordUser(id=member.id,
-                              username=member.name,
-                              discriminator=member.discriminator,
-                              bot=member.bot,
-                              joined_at=member.joined_at,
-                            )
+        _member = DiscordUser(
+            id=member.id,
+            username=member.name,
+            discriminator=member.discriminator,
+            bot=member.bot,
+            joined_at=member.joined_at,
+        )
         await sync_to_async(_member.save)()
 
         for role in member.roles:
@@ -87,15 +88,17 @@ class ManageUsers(commands.Cog):
     @commands.Cog.listener()
     async def on_member_update(self, old: nextcord.Member, new: nextcord.Member):
         """Event когда пользователь обновляет свои данные в гильдии дискорда.
-           Обновляемые данные в этом эвенте:
-                - nickname
-                - roles
-                - pending
+        Обновляемые данные в этом эвенте:
+             - nickname
+             - roles
+             - pending
         """
         try:
             _member = await DiscordUser.objects.aget(id=old.id)
         except Exception as e:
-            logger.warning(f"Member {old.name} with #{old.id} not found in database: \n{e}")
+            logger.warning(
+                f"Member {old.name} with #{old.id} not found in database: \n{e}"
+            )
             return
 
         _member.username = new.name
@@ -116,15 +119,17 @@ class ManageUsers(commands.Cog):
     @commands.Cog.listener()
     async def on_user_update(self, old: nextcord.User, new: nextcord.User):
         """Event когда пользователь обновляет данные профиля дискорда.
-           Обновляемые данные при этом:
-                - avatar
-                - name
-                - discriminator
-                """
+        Обновляемые данные при этом:
+             - avatar
+             - name
+             - discriminator
+        """
         try:
             _member = await DiscordUser.objects.aget(id=old.id)
         except Exception as e:
-            logger.warning(f"User {old.name} with #{old.id} not found in database:\n{e}")
+            logger.warning(
+                f"User {old.name} with #{old.id} not found in database:\n{e}"
+            )
             return
 
         _member.username = new.name

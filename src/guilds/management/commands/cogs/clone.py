@@ -18,9 +18,9 @@ class Clone(commands.Cog, name="Clone Diablo"):
         self.url = "https://d2runewizard.com/api/diablo-clone-progress/all"
         self.params = {"token": settings.TOKEN_D2R}
         self.headers = {
-            'D2R-Contact': 'qordes@gmail.com',
-            'D2R-Platform': 'https://discord.gg/qordes',
-            'D2R-Repo': 'https://github.com/VladMerk'
+            "D2R-Contact": "qordes@gmail.com",
+            "D2R-Platform": "https://discord.gg/qordes",
+            "D2R-Repo": "https://github.com/VladMerk",
         }
         self.progress = {}
         self.flag = 0
@@ -32,7 +32,9 @@ class Clone(commands.Cog, name="Clone Diablo"):
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url=self.url, params=self.params, headers=self.headers) as r:
+            async with session.get(
+                url=self.url, params=self.params, headers=self.headers
+            ) as r:
                 if r.status != 200:
                     logger.critical("D2R not connected.")
                     self.progress = None
@@ -54,7 +56,9 @@ class Clone(commands.Cog, name="Clone Diablo"):
         message = ""
         if self.flag:
             message += "\nПоследнее изменение:\n"
-            message += self.get_server(prg=prg, servers=[prg[self.top_clone_server]["server"]])
+            message += self.get_server(
+                prg=prg, servers=[prg[self.top_clone_server]["server"]]
+            )
 
         message += "***Ladder***\n"
         message += self.get_server(
@@ -135,7 +139,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
 
         locale_value = cache.get("clone")
 
-        if locale_value != {} and cache.get('clone') is not None:
+        if locale_value != {} and cache.get("clone") is not None:
             for server in self.progress:
                 if locale_value[server]["progres"] != self.progress[server]["progres"]:
                     self.top_clone_server = server
@@ -158,7 +162,6 @@ class Clone(commands.Cog, name="Clone Diablo"):
 
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
-
         self._data = await Settings.objects.afirst()
 
         if message.channel.id == self._data.clone_channel_id:

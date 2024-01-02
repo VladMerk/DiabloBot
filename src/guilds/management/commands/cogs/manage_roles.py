@@ -1,6 +1,6 @@
 import logging
-import nextcord
 
+import nextcord
 from asgiref.sync import sync_to_async
 from nextcord.ext import commands
 
@@ -34,7 +34,9 @@ class ManageRoles(commands.Cog):
         logger.debug(f"Role {role.name} is deleted.")
 
     @commands.Cog.listener()
-    async def on_guild_role_update(self, old_role: nextcord.Role, new_role: nextcord.Role):
+    async def on_guild_role_update(
+        self, old_role: nextcord.Role, new_role: nextcord.Role
+    ):
         try:
             _role = await Roles.objects.aget(id=old_role.id, name=old_role.name)
         except Exception as e:

@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = "Loads initial data about `TerrorZone` into database"
 
@@ -13,6 +14,6 @@ class Command(BaseCommand):
         from guilds.models import TerrorZones
 
         if not TerrorZones.objects.exists():
-            call_command('loaddata', 'terror_zone.json')
+            call_command("loaddata", "terror_zone.json")
         else:
             logger.info("Data already exists in database. Skipping data load...")

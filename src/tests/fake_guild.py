@@ -1,18 +1,16 @@
 from datetime import datetime
 from typing import List, Optional, TypedDict
-import nextcord
 from unittest import mock
 
+import nextcord
 from django.utils import timezone
-
+from nextcord.abc import GuildChannel
 from nextcord.member import Member
 from nextcord.role import Role
-from nextcord.abc import GuildChannel
 from nextcord.types.guild import Guild as GuildPayload
 
 
 class FakeChannel(GuildChannel):
-
     def __init__(self, id: int, name: str) -> None:
         self.id = id
         self.name = name
@@ -20,21 +18,23 @@ class FakeChannel(GuildChannel):
 
 
 class FakeRole(nextcord.Role):
-
     def __init__(self, id: int, name: str) -> None:
         self.id = id
         self.name = name
 
 
 class FakeMember:
-    def __init__(self, id: int,
-                        name: str,
-                        display_name: str,
-                        discriminator: int,
-                        bot: bool,
-                        joined_at: datetime,
-                        removed_at: Optional[datetime],
-                        roles: list[FakeRole]) -> None:
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        display_name: str,
+        discriminator: int,
+        bot: bool,
+        joined_at: datetime,
+        removed_at: Optional[datetime],
+        roles: list[FakeRole],
+    ) -> None:
         self._id = id
         self._name = name
         self._display_name = display_name
@@ -83,7 +83,7 @@ class FakeMember:
 class FakeGuild(nextcord.Guild):
     def __init__(self, *args, **kwargs):
         self.id = 1234567890
-        self.name = 'TestDiabloBotGuild'
+        self.name = "TestDiabloBotGuild"
         self._channels = []
         self._roles = []
         self._members = []
@@ -92,20 +92,35 @@ class FakeGuild(nextcord.Guild):
     def channels(self) -> List[GuildChannel]:
         return self._channels
 
-    def add_channel(self, id:int, name: str):
+    def add_channel(self, id: int, name: str):
         self._channels.append(FakeChannel(id=id, name=name))
 
     @property
     def members(self) -> List[Member]:
         return self._members
 
-    def add_member(self, id: int, name: str, display_name: str,
-                   discriminator: int, bot: bool, joined_at: datetime,
-                   removed_at: Optional[datetime], roles: List[FakeRole]) -> None:
+    def add_member(
+        self,
+        id: int,
+        name: str,
+        display_name: str,
+        discriminator: int,
+        bot: bool,
+        joined_at: datetime,
+        removed_at: Optional[datetime],
+        roles: List[FakeRole],
+    ) -> None:
         self._members.append(
-            FakeMember(id=id, name=name, display_name=display_name,
-                       discriminator=discriminator, bot=bot, joined_at=joined_at,
-                       removed_at=removed_at, roles=roles)
+            FakeMember(
+                id=id,
+                name=name,
+                display_name=display_name,
+                discriminator=discriminator,
+                bot=bot,
+                joined_at=joined_at,
+                removed_at=removed_at,
+                roles=roles,
+            )
         )
 
     @property

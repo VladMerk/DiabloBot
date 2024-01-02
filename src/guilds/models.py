@@ -19,7 +19,9 @@ class Settings(models.Model):
         blank=True,
         related_name="clone_set",
     )
-    max_time = models.PositiveIntegerField(default=5, validators=[MinValueValidator(5), MaxValueValidator(60)])
+    max_time = models.PositiveIntegerField(
+        default=5, validators=[MinValueValidator(5), MaxValueValidator(60)]
+    )
     fasttrade_channel = models.ForeignKey(
         "guilds.Channels",
         on_delete=models.SET_NULL,
@@ -27,7 +29,9 @@ class Settings(models.Model):
         blank=True,
         related_name="fasttrade_set",
     )
-    fasttrade_channel_role = models.ForeignKey("guilds.Roles", blank=True, null=True, on_delete=models.SET_NULL)
+    fasttrade_channel_role = models.ForeignKey(
+        "guilds.Roles", blank=True, null=True, on_delete=models.SET_NULL
+    )
     fasttrade_channel_time = models.PositiveIntegerField(default=20)
 
     def __str__(self):
@@ -49,7 +53,7 @@ class Channels(models.Model):
         verbose_name = "Channels"
         verbose_name_plural = "Channels"
         ordering = ["name"]
-        unique_together = [['id', 'name']]
+        unique_together = [["id", "name"]]
 
 
 class Roles(models.Model):

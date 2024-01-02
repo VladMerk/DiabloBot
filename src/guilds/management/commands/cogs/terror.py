@@ -9,6 +9,8 @@ from nextcord.ext import commands, tasks
 
 from guilds.models import Settings, TerrorZones
 
+from .next_terror_dict import get_next_terror_zone
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,9 +20,9 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
         self.headers = {
-            'D2R-Contact': 'qordes@gmail.com',
-            'D2R-Platform': 'https://discord.gg/qordes',
-            'D2R-Repo': 'https://github.com/VladMerk'
+            "D2R-Contact": "qordes@gmail.com",
+            "D2R-Platform": "https://discord.gg/qordes",
+            "D2R-Repo": "https://github.com/VladMerk",
         }
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
@@ -30,7 +32,9 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url=self.url, params=self.params, headers=self.headers) as r:
+            async with session.get(
+                url=self.url, params=self.params, headers=self.headers
+            ) as r:
                 if r.status == 200:
                     rjson = await r.json()
                     logger.info(f"New zone is {rjson['terrorZone']['zone']}")
@@ -58,16 +62,26 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         if cache.get("zone") is None or zone != cache.get("zone"):
             server = self.bot.get_guild(self._data.id)
 
+            next_zone = await get_next_terror_zone()
+
             _zone = await TerrorZones.objects.select_related().filter(key=zone).afirst()
             logger.debug(f"{_zone}")
             if _zone is not None:
                 message = f"\n**Terror Zone**: {_zone.name_en} in **{_zone.act} Act**\n"
                 message += f"**Зона Ужаса**: {_zone.name_ru} в **{_zone.act} акте**\n"
                 message += f"\n**Иммунитеты**: {_zone.immunities_en}\n"
-                message += f"**Количество пачек с уникальными мобами**: {_zone.boss_packs}\n"
+                message += (
+                    f"**Количество пачек с уникальными мобами**: {_zone.boss_packs}\n"
+                )
                 message += f"**Uniques**: {_zone.super_uniques}\n"
-                message += f"**Количество особых сундуков**: {_zone.sparkly_chests}" if bool(_zone.sparkly_chests) else ""
-                message += "\nProvided By <https://d2runewizard.com>"
+                message += (
+                    f"**Количество особых сундуков**: {_zone.sparkly_chests}\n"
+                    if bool(_zone.sparkly_chests)
+                    else ""
+                )
+                if next_zone:
+                    message += f"\n**Следующая зона ужаса**: \n{next_zone}"
+                message += "\n\nProvided By <https://d2runewizard.com>"
                 if _zone.role_id:
                     zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
                     message += f"\n\n{zone_role.mention}"
@@ -86,7 +100,6 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
 
     @commands.Cog.listener()
     async def on_message(self, message: nextcord.message.Message):
-
         self._data = await self.get_settings()
 
         if message.channel.id == self._data.terror_channel_id:

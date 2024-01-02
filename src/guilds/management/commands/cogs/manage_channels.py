@@ -1,8 +1,8 @@
 import logging
-import nextcord
 
-from nextcord.ext import commands
+import nextcord
 from asgiref.sync import sync_to_async
+from nextcord.ext import commands
 
 from guilds.models import Channels
 
@@ -17,8 +17,7 @@ class ManageChannels(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self, channel: nextcord.abc.GuildChannel):
-        _channel = Channels(id=channel.id,
-                            name=channel.name)
+        _channel = Channels(id=channel.id, name=channel.name)
 
         await sync_to_async(_channel.save)()
         logger.debug(f"Channel {channel.name} is created in database")
@@ -26,8 +25,7 @@ class ManageChannels(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_channel_delete(self, channel: nextcord.abc.GuildChannel):
         try:
-            _channel = await Channels.objects.aget(id=channel.id,
-                                        name=channel.name)
+            _channel = await Channels.objects.aget(id=channel.id, name=channel.name)
         except Exception as e:
             logger.warning(f"Channel {channel.name} not found in database")
             return
@@ -36,12 +34,15 @@ class ManageChannels(commands.Cog):
         logger.debug(f"Channel {channel.name} is deleted from database")
 
     @commands.Cog.listener()
-    async def on_guild_channel_update(self,
-                                      old_channel: nextcord.abc.GuildChannel,
-                                      new_channel: nextcord.abc.GuildChannel):
+    async def on_guild_channel_update(
+        self,
+        old_channel: nextcord.abc.GuildChannel,
+        new_channel: nextcord.abc.GuildChannel,
+    ):
         try:
-            _channel = await Channels.objects.aget(id=old_channel.id,
-                                                   name=old_channel.name)
+            _channel = await Channels.objects.aget(
+                id=old_channel.id, name=old_channel.name
+            )
         except Exception as e:
             logger.warning(f"Channel {old_channel.name} not found in database")
             return
