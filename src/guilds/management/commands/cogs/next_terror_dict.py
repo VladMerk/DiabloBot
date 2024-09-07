@@ -190,8 +190,8 @@ next_terror = TZ_ID_TO_STRING | TZ_ID_TO_STRING2
 
 url = "https://www.d2emu.com/api/v1/tz"
 headers: dict[str, str] = {
-    'x-emu-username': 'qordes',
-    'x-emu-token': settings.TOKEN_EMU
+    "x-emu-username": "qordes",
+    "x-emu-token": settings.TOKEN_EMU,
 }
 
 

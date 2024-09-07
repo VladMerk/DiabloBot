@@ -18,7 +18,17 @@ redis = "^5.0.8"
 pytest = "^8.3.2"
 ruff = "^0.6.4"
 mypy = "^1.11.2"
+mypy-extensions = "^1.0.0"
+typing-extensions = "^4.12.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+disallow_untyped_defs = true
+
+[tool.lint.ruff]
+select = ["I"]

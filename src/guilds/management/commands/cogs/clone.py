@@ -8,6 +8,7 @@ from guilds.models import Settings
 
 logger = logging.getLogger(__name__)
 
+
 class Clone(commands.Cog, name="Clone Diablo"):
     def __init__(self, bot: commands.Bot):
         self.top_clone_server = None
@@ -37,7 +38,10 @@ class Clone(commands.Cog, name="Clone Diablo"):
                     self.progress = None
                     return
                 rjson = await r.json()
-                self.progress = {item["server"]: self.parse_server_data(item) for item in rjson["servers"]}
+                self.progress = {
+                    item["server"]: self.parse_server_data(item)
+                    for item in rjson["servers"]
+                }
 
     def parse_server_data(self, item):
         return {
@@ -56,12 +60,32 @@ class Clone(commands.Cog, name="Clone Diablo"):
             message += self.get_server(prg, [prg[self.top_clone_server]["server"]])
 
         message += "***Ladder***\n"
-        message += self.get_server(prg, ["ladderSoftcoreAsia", "ladderSoftcoreEurope", "ladderSoftcoreAmericas"])
-        message += self.get_server(prg, ["ladderHardcoreAsia", "ladderHardcoreEurope", "ladderHardcoreAmericas"])
+        message += self.get_server(
+            prg,
+            ["ladderSoftcoreAsia", "ladderSoftcoreEurope", "ladderSoftcoreAmericas"],
+        )
+        message += self.get_server(
+            prg,
+            ["ladderHardcoreAsia", "ladderHardcoreEurope", "ladderHardcoreAmericas"],
+        )
 
         message += "***NonLadder***\n"
-        message += self.get_server(prg, ["nonLadderSoftcoreAsia", "nonLadderSoftcoreEurope", "nonLadderSoftcoreAmericas"])
-        message += self.get_server(prg, ["nonLadderHardcoreAsia", "nonLadderHardcoreEurope", "nonLadderHardcoreAmericas"])
+        message += self.get_server(
+            prg,
+            [
+                "nonLadderSoftcoreAsia",
+                "nonLadderSoftcoreEurope",
+                "nonLadderSoftcoreAmericas",
+            ],
+        )
+        message += self.get_server(
+            prg,
+            [
+                "nonLadderHardcoreAsia",
+                "nonLadderHardcoreEurope",
+                "nonLadderHardcoreAmericas",
+            ],
+        )
 
         message += "\nProvided By <https://d2runewizard.com>"
         return message
@@ -73,7 +97,7 @@ class Clone(commands.Cog, name="Clone Diablo"):
             ladder_type = "Ladder" if prg[server]["ladder"] else "NonLadder"
             hardcore_type = "Hardcore" if prg[server]["hardcore"] else "Softcore"
             region = prg[server]["region"]
-            last_update = prg[server]['lastUpdate']
+            last_update = prg[server]["lastUpdate"]
             mess += f"**[{progress}/6]** {ladder_type} {hardcore_type} {region} <t:{last_update}:R>\n"
         return mess + "\n"
 

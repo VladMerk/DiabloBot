@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+import typing
 
 import aiohttp
 import nextcord
@@ -27,10 +28,10 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
 
-    async def get_settings(self):
+    async def get_settings(self) -> Settings | None:
         return await Settings.objects.afirst()
 
-    async def get_json(self):
+    async def get_json(self) -> typing.Any | None:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 url=self.url, params=self.params, headers=self.headers
@@ -44,7 +45,7 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                     return None
 
     @tasks.loop(seconds=30)
-    async def terror_zone(self):
+    async def terror_zone(self) -> None:
         self._data = await self.get_settings()
 
         if datetime.now().minute not in range(2, self._data.max_time):
@@ -95,11 +96,11 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                 cache.set("zone", zone)
 
     @terror_zone.before_loop
-    async def befor_terror_zone(self):
+    async def befor_terror_zone(self) -> None:
         await self.bot.wait_until_ready()
 
     @commands.Cog.listener()
-    async def on_message(self, message: nextcord.message.Message):
+    async def on_message(self, message: nextcord.message.Message) -> None:
         self._data = await self.get_settings()
 
         if message.channel.id == self._data.terror_channel_id:
@@ -108,5 +109,5 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
             return
 
 
-def setup(bot: commands.Bot):
+def setup(bot: commands.Bot) -> None:
     bot.add_cog(TerrorZoneChannel(bot=bot))
