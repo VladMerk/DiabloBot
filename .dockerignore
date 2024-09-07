@@ -3,3 +3,4 @@
 ./src/db.sqlite3
 todo.txt
 .pytest_cache
+.idea/

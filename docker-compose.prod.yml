@@ -25,7 +25,7 @@ services:
       start_period: 30s
 
   backend:
-    image: vladmerk/django-bot:graphics
+    image: vladmerk/django-bot:devel
     container_name: backend
     volumes:
         - ./src/db.sqlite3:/app/db.sqlite3
@@ -49,7 +49,7 @@ services:
         gunicorn --bind :8000 -w 3 www.wsgi:application
 
   bot:
-    image: vladmerk/django-bot:graphics
+    image: vladmerk/django-bot:devel
     container_name: bot
     env_file:
       - .env
