@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 TOKEN = os.environ.get("TOKEN")
 TOKEN_D2R = os.environ.get("TOKEN_D2R")
+TOKEN_EMU = os.environ.get("TOKEN_EMU")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))

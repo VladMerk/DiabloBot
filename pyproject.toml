@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "diablobot"
+version = "0.1.0"
+description = ""
+authors = ["VladMerk <merkvladimir@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+setuptools = "^74.1.2"
+aiohttp = "^3.10.5"
+django = "^5.1.1"
+nextcord = "^2.6.0"
+redis = "^5.0.8"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+ruff = "^0.6.4"
+mypy = "^1.11.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

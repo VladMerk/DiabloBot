@@ -81,7 +81,7 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                 )
                 if next_zone:
                     message += f"\n**Следующая зона ужаса**: \n{next_zone}"
-                message += "\n\nProvided By <https://d2runewizard.com>"
+                message += "\n\nProvided By <https://d2runewizard.com> and <https://www.d2emu.com/>"
                 if _zone.role_id:
                     zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
                     message += f"\n\n{zone_role.mention}"

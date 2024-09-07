@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 import aiohttp
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -188,11 +189,15 @@ TZ_ID_TO_STRING2 = {
 next_terror = TZ_ID_TO_STRING | TZ_ID_TO_STRING2
 
 url = "https://www.d2emu.com/api/v1/tz"
+headers: dict[str, str] = {
+    'x-emu-username': 'qordes',
+    'x-emu-token': settings.TOKEN_EMU
+}
 
 
 async def get_next_terror_zone():
     async with aiohttp.ClientSession() as session:
-        async with session.get(url=url) as r:
+        async with session.get(url=url, headers=headers) as r:
             if r.status == 200:
                 rjson = await r.json()
                 logger.info(f"Next Terror zone is {rjson}")
