@@ -46,6 +46,7 @@ class TerrorZonesAdmin(admin.ModelAdmin):
     list_display = (
         "act",
         "name_en",
+        "key"
     )
     list_filter = ("act",)
     list_display_links = ("name_en",)

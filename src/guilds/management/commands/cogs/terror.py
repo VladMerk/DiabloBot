@@ -18,9 +18,9 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
         self.params = {"token": settings.TOKEN_D2R}
         self.url = "https://d2runewizard.com/api/terror-zone"
         self.headers = {
-            'D2R-Contact': 'qordes@gmail.com',
-            'D2R-Platform': 'https://discord.gg/qordes',
-            'D2R-Repo': 'https://github.com/VladMerk'
+            "D2R-Contact": "qordes@gmail.com",
+            "D2R-Platform": "https://discord.gg/qordes",
+            "D2R-Repo": "https://github.com/VladMerk",
         }
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
@@ -30,11 +30,13 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
 
     async def get_json(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url=self.url, params=self.params, headers=self.headers) as r:
+            async with session.get(
+                url=self.url, params=self.params, headers=self.headers
+            ) as r:
                 if r.status == 200:
                     rjson = await r.json()
-                    logger.info(f"New zone is {rjson['terrorZone']['zone']}")
-                    return rjson["terrorZone"]["zone"]
+                    logger.info(f"New zone is {rjson['currentTerrorZone']['zone']}")
+                    return rjson["currentTerrorZone"]["zone"]
                 else:
                     logger.warning("Connection error in terror zone function")
                     return None
@@ -64,9 +66,15 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                 message = f"\n**Terror Zone**: {_zone.name_en} in **{_zone.act} Act**\n"
                 message += f"**Зона Ужаса**: {_zone.name_ru} в **{_zone.act} акте**\n"
                 message += f"\n**Иммунитеты**: {_zone.immunities_en}\n"
-                message += f"**Количество пачек с уникальными мобами**: {_zone.boss_packs}\n"
+                message += (
+                    f"**Количество пачек с уникальными мобами**: {_zone.boss_packs}\n"
+                )
                 message += f"**Uniques**: {_zone.super_uniques}\n"
-                message += f"**Количество особых сундуков**: {_zone.sparkly_chests}" if bool(_zone.sparkly_chests) else ""
+                message += (
+                    f"**Количество особых сундуков**: {_zone.sparkly_chests}"
+                    if bool(_zone.sparkly_chests)
+                    else ""
+                )
                 message += "\nProvided By <https://d2runewizard.com>"
                 if _zone.role_id:
                     zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
