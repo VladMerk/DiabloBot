@@ -1,7 +1,7 @@
 [
     {
         "model": "guilds.terrorzones",
-        "pk": "65",
+        "pk": "Ancient Tunnels",
         "fields": {
             "name_en": "Ancient Tunnels",
             "name_ru": "Древние тунели",
@@ -16,7 +16,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "118",
+        "pk": "Ancient's Way and Icy Cellar",
         "fields": {
             "name_en": "Ancient's Way and Icy Cellar",
             "name_ru": "Путь Древних и Ледяной грот",
@@ -31,7 +31,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "74",
+        "pk": "Arcane Sanctuary",
         "fields": {
             "name_en": "Arcane Sanctuary",
             "name_ru": "Магическое убежище",
@@ -46,7 +46,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "112",
+        "pk": "Arreat Plateau and Pit of Acheron",
         "fields": {
             "name_en": "Arreat Plateau and Pit of Acheron",
             "name_ru": "Арреатское плато и Яма Ашерона",
@@ -61,7 +61,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "6",
+        "pk": "Black Marsh and The Hole",
         "fields": {
             "name_en": "Black Marsh and The Hole",
             "name_ru": "Черная топь и дыра",
@@ -76,7 +76,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "2",
+        "pk": "Blood Moor and Den of Evil",
         "fields": {
             "name_en": "Blood Moor and Den of Evil",
             "name_ru": "Кровавая пустошь и Логово зла",
@@ -91,7 +91,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "110",
+        "pk": "Bloody Foothills, Frigid Highlands and Abaddon",
         "fields": {
             "name_en": "Bloody Foothills, Frigid Highlands and Abaddon",
             "name_ru": "Кровавые предгорья, Мерзлое нагорье и Абаддон",
@@ -106,7 +106,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "17",
+        "pk": "Burial Grounds, The Crypt, and The Mausoleum",
         "fields": {
             "name_en": "Burial Grounds, The Crypt, and The Mausoleum",
             "name_ru": "Погост, Мавзолей и Склеп",
@@ -121,7 +121,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "33",
+        "pk": "Cathedral and Catacombs",
         "fields": {
             "name_en": "Cathedral and Catacombs",
             "name_ru": "Собор и Катакомбы",
@@ -136,7 +136,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "108",
+        "pk": "Chaos Sanctuary",
         "fields": {
             "name_en": "Chaos Sanctuary",
             "name_ru": "Святилище Хаоса",
@@ -151,7 +151,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "3",
+        "pk": "Cold Plains and The Cave",
         "fields": {
             "name_en": "Cold Plains and The Cave",
             "name_ru": "Стылые равнины и Пещера",
@@ -166,7 +166,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "113",
+        "pk": "Crystalline Passage and Frozen River",
         "fields": {
             "name_en": "Crystalline Passage and Frozen River",
             "name_ru": "Ледяные пещеры и Замершая река",
@@ -181,7 +181,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "5",
+        "pk": "Dark Wood and Underground Passage",
         "fields": {
             "name_en": "Dark Wood and Underground Passage",
             "name_ru": "Темнолесье и подземный проход",
@@ -196,7 +196,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "42",
+        "pk": "Dry Hills and Halls of the Dead",
         "fields": {
             "name_en": "Dry Hills and Halls of the Dead",
             "name_ru": "Иссохшие холмы и Чертоги Мертвых",
@@ -211,7 +211,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "100",
+        "pk": "Durance of Hate",
         "fields": {
             "name_en": "Durance of Hate",
             "name_ru": "Узилище Ненависти",
@@ -226,7 +226,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "43",
+        "pk": "Far Oasis",
         "fields": {
             "name_en": "Far Oasis",
             "name_ru": "Дальний оазис",
@@ -241,7 +241,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "78",
+        "pk": "Flayer Jungle and Flayer Dungeon",
         "fields": {
             "name_en": "Flayer Jungle and Flayer Dungeon",
             "name_ru": "Джунгли свежевателей и Подземелье свежевателей",
@@ -271,7 +271,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "115",
+        "pk": "Glacial Trail and Drifter Cavern",
         "fields": {
             "name_en": "Glacial Trail and Drifter Cavern",
             "name_ru": "Ледовый ход",
@@ -286,7 +286,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "77",
+        "pk": "Great Marsh",
         "fields": {
             "name_en": "Great Marsh",
             "name_ru": "Великое болото",
@@ -301,7 +301,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "28",
+        "pk": "Jail and Barracks",
         "fields": {
             "name_en": "Jail and Barracks",
             "name_ru": "Тюрьма и бараки",
@@ -316,7 +316,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "80",
+        "pk": "Kurast Bazaar, Ruined Temple, and Disused Fane",
         "fields": {
             "name_en": "Kurast Bazaar, Ruined Temple, and Disused Fane",
             "name_ru": "Курастский базар, Разрушенный храм и Заброшенная церковь",
@@ -346,7 +346,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "44",
+        "pk": "Lost City, Valley of Snakes, and Claw Viper Temple",
         "fields": {
             "name_en": "Lost City, Valley of Snakes, and Claw Viper Temple",
             "name_ru": "Затерянный город, Долина змей и Храм Когтистой Гадюки",
@@ -361,7 +361,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "39",
+        "pk": "Moo Moo Farm",
         "fields": {
             "name_en": "Moo Moo Farm",
             "name_ru": "Секретный коровия уровень",
@@ -376,7 +376,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "121",
+        "pk": "Nihlathak's Temple, Halls of Anguish, Halls of Pain, and Halls of Vaught",
         "fields": {
             "name_en": "Nihlathak's Temple, Halls of Anguish, Halls of Pain, and Halls of Vaught",
             "name_ru": "Храм Нильятака, Чертоги Мучений, Чертоги Боли и Чертоги Воута",
@@ -391,7 +391,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "104",
+        "pk": "Outer Steppes and Plains of Despair",
         "fields": {
             "name_en": "Outer Steppes and Plains of Despair",
             "name_ru": "Рубежные степи и Долина Отчаяния",
@@ -406,7 +406,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "106",
+        "pk": "River of Flame and City of the Damned",
         "fields": {
             "name_en": "River of Flame and City of the Damned",
             "name_ru": "Город проклятых и Огненая река",
@@ -421,7 +421,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "41",
+        "pk": "Rocky Waste and Stony Tomb",
         "fields": {
             "name_en": "Rocky Waste and Stony Tomb",
             "name_ru": "Каменистая пустошь и Каменная гробница",
@@ -436,7 +436,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "47",
+        "pk": "Sewers",
         "fields": {
             "name_en": "Lut Gholein Sewers",
             "name_ru": "Стоки Лут Голейна",
@@ -451,7 +451,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "76",
+        "pk": "Spider Forest and Spider Cavern",
         "fields": {
             "name_en": "Spider Forest and Spider Cavern",
             "name_ru": "Паучий Лес и Паучья Пещера",
@@ -466,7 +466,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "4",
+        "pk": "Stony Field",
         "fields": {
             "name_en": "Stony Field",
             "name_ru": "Каменистое поле",
@@ -481,7 +481,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "66",
+        "pk": "Tal Rasha's Tombs and Tal Rasha's Chamber",
         "fields": {
             "name_en": "Tal Rasha's Tombs and Tal Rasha's Chamber",
             "name_ru": "Гробницы Тал Раши",
@@ -496,7 +496,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "20",
+        "pk": "The Forgotten Tower",
         "fields": {
             "name_en": "The Forgotten Tower",
             "name_ru": "Заброшенная башня",
@@ -511,7 +511,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "12",
+        "pk": "The Pit",
         "fields": {
             "name_en": "The Pit",
             "name_ru": "Яма",
@@ -526,7 +526,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "83",
+        "pk": "Travincal",
         "fields": {
             "name_en": "Travincal",
             "name_ru": "Травинкаль",
@@ -541,7 +541,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "38",
+        "pk": "Tristram",
         "fields": {
             "name_en": "Tristram",
             "name_ru": "Тристрам",
@@ -556,7 +556,7 @@
     },
     {
         "model": "guilds.terrorzones",
-        "pk": "128",
+        "pk": "Worldstone Keep, Throne of Destruction, and Worldstone Chamber",
         "fields": {
             "name_en": "Worldstone Keep, Throne of Destruction, and Worldstone Chamber",
             "name_ru": "Цитадель Мироздания, Престол Разрушения и Святилище Мироздания",

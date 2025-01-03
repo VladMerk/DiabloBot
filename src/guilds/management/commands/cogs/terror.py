@@ -16,11 +16,16 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.params = {"token": settings.TOKEN_D2R}
-        self.url = "https://d2runewizard.com/api/terror-zone"
+        # self.url = "https://d2runewizard.com/api/terror-zone"
+        self.url = "https://www.d2emu.com/api/v1/tz"
+        # self.headers = {
+        #     "D2R-Contact": "qordes@gmail.com",
+        #     "D2R-Platform": "https://discord.gg/qordes",
+        #     "D2R-Repo": "https://github.com/VladMerk",
+        # }
         self.headers = {
-            "D2R-Contact": "qordes@gmail.com",
-            "D2R-Platform": "https://discord.gg/qordes",
-            "D2R-Repo": "https://github.com/VladMerk",
+            "x-emu-username": "qordes",
+            "x-emu-token": settings.TOKEN_EMU,
         }
         self.terror_zone.start()
         logger.debug("Cog 'Terror Zone' is loaded.")
@@ -35,8 +40,8 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
             ) as r:
                 if r.status == 200:
                     rjson = await r.json()
-                    logger.info(f"New zone is {rjson['currentTerrorZone']['zone']}")
-                    return rjson["currentTerrorZone"]["zone"]
+                    logger.info(f"New zone is {rjson['current'][0]}")
+                    return rjson["current"][0]
                 else:
                     logger.warning("Connection error in terror zone function")
                     return None
@@ -75,7 +80,7 @@ class TerrorZoneChannel(commands.Cog, name="Terror Zone"):
                     if bool(_zone.sparkly_chests)
                     else ""
                 )
-                message += "\nProvided By <https://d2runewizard.com>"
+                message += "\nProvided By <https://d2emu.com>"
                 if _zone.role_id:
                     zone_role = nextcord.utils.get(server.roles, id=_zone.role_id)
                     message += f"\n\n{zone_role.mention}"

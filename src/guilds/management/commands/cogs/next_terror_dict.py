@@ -68,7 +68,7 @@ TZ_ID_TO_STRING2 = {
     18: "Crypt",
     19: "Mausoleum",
     20: "Forgotten Tower",
-    21: "Tower Cellar Level 1",static/
+    21: "Tower Cellar Level 1",
     22: "Tower Cellar Level 2",
     23: "Tower Cellar Level 3",
     24: "Tower Cellar Level 4",
@@ -202,6 +202,7 @@ async def get_next_terror_zone():
             if r.status == 200:
                 rjson = await r.json()
                 logger.info(f"Next Terror zone is {rjson}")
+                logger.info(f"Current Terror zone is {rjson['current'][0]}")
                 return "\n".join(next_terror[int(zone)] for zone in rjson["next"])
             else:
                 logger.warning("Connection error in next terror zone function")
